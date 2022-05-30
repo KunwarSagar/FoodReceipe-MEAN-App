@@ -52,7 +52,7 @@ const addOne = function(req, res){
     const food = {
         name: req.body.name,
         origin:req.body.origin,
-        ingredients:[]
+        ingredients:req.body.ingredients
     };
 
     Food.create(food, function(err, food){
@@ -90,7 +90,7 @@ const updateOne = function(req, res){
     const foodUpdate = function(req, res, food, response){
         food.name = req.body.name ? req.body.name : food.name;
         food.origin = req.body.origin ? req.body.origin : food.origin;
-        food.ingredients = [];
+        // food.ingredients = req.body.ingredients ? req.body.ingredients : food.ingredients;
         
         food.save(function(err, updatedFood){
             if(err){
