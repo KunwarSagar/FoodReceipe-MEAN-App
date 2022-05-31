@@ -75,8 +75,9 @@ const updateOne = function(req, res){
         const ingredientId = req.params.ingredientId;
 
         let ing = response.message.id(ingredientId);
-            ing = req.body.ingredients[0];
-        
+            ing.name = req.body.ingredients[0]["name"];
+            ing.quantity = req.body.ingredients[0]["quantity"];
+
         food.save(function(err, updatedFood){
             const response = {status: 201, message:updatedFood.ingredients.id(ingredientId)}
             if(err){

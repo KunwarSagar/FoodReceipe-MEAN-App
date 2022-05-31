@@ -1,8 +1,9 @@
 const Food = require("mongoose").model(process.env.FOOD_MODEL);
 
 const getAll = function(req, res){
-    const count = parseInt(process.env.COUNT, process.env.RADIX);
-    const offset = parseInt(process.env.OFFSET, process.env.RADIX);
+    let count = parseInt(process.env.COUNT, process.env.RADIX);
+    let offset = parseInt(process.env.OFFSET, process.env.RADIX);
+    let maxCount = parseInt(process.env.MAX_COUNT, process.env.RADIX);
 
     if(req.query && req.query.count){
         count = parseInt(req.query.count, process.env.RADIX);
@@ -12,17 +13,33 @@ const getAll = function(req, res){
         offset = parseInt(req.query.offset, process.env.RADIX);
     }
 
-    Food.find().skip(offset).limit(count).exec(function(err, games){
-        const response = {status:200, message:games};
-        
+    const response = {status:204, message:{}};
+
+    if (isNaN(offset) || isNaN(count)) {
+        response.status = 400;
+        response.message = {message:"QueryString Offset and Count should be numbers"};
+    }
+
+    if (count > maxCount) {
+        response.status = 400;
+        response.message = {message: "Max count Cannot exceed "+ maxCount}
+    }
+
+    if(response.status != 204){
+        res.status(response.status).json(response.message);
+        return;
+    }
+
+    Food.find().skip(offset).limit(count).exec(function(err, foods){
+        const response = {status:200, message:foods};
         if(err){
             console.log("Error", err);
             response.status = 500;
             response.message = {message:"Internal server error."}
-        }else if(!games){
-            console.log("Games not found");
+        }else if(!foods){
+            console.log("Food not found");
             response.status = 404;
-            response.message = {message:"Games not found"}
+            response.message = {message:"Food not found"}
         }
 
         res.status(response.status).json(response.message);
@@ -33,7 +50,6 @@ const getOne = function(req, res){
     const foodId = req.params.foodId;
     Food.findById(foodId).exec(function(err, food){
         const response = {status:200, message:food};
-
         if(err){
             console.log("Error", err);
             response.status = 500;
@@ -44,7 +60,7 @@ const getOne = function(req, res){
             response.message = {message:"Food not found"}
         }
 
-        res.status(response.status).json(food);
+        res.status(response.status).json(response.message);
     })
 }
 
@@ -52,6 +68,7 @@ const addOne = function(req, res){
     const food = {
         name: req.body.name,
         origin:req.body.origin,
+        description: req.body.description,
         ingredients:req.body.ingredients
     };
 
@@ -67,7 +84,7 @@ const addOne = function(req, res){
     });
 }
 
-const _updateOne = function(req, res, foodUpdate){
+const _update = function(req, res, _updateFood){
     const foodId = req.params.foodId;
     Food.findById(foodId).exec(function(err, food){
         const response = {status: 204, message:food};
@@ -81,32 +98,50 @@ const _updateOne = function(req, res, foodUpdate){
         if(response.status != 204){
             res.status(response.status).json(response.message);
         }
-        foodUpdate(req, res, food, response);
+        _updateFood(req, res, food);
     });
 }
 
-const updateOne = function(req, res){
+const partialUpdateFood = function(req, res){
+    _update(req, res, _partialUpdateFood)
+}
 
-    const foodUpdate = function(req, res, food, response){
-        food.name = req.body.name ? req.body.name : food.name;
-        food.origin = req.body.origin ? req.body.origin : food.origin;
-        // food.ingredients = req.body.ingredients ? req.body.ingredients : food.ingredients;
-        
-        food.save(function(err, updatedFood){
-            if(err){
-                console.log("Error", err);
-                response.status = 500;
-                response.message = {message :"Internal server error"};
-            }else{
-                response.status = 202;
-                response.message = updatedFood;
-            }
+const _partialUpdateFood = function(req, res, food){
+    
+    food.name = req.body.name ? req.body.name : food.name;
+    food.origin = req.body.origin ? req.body.origin : food.origin;
+    food.description = req.body.description ? req.body.description : food.description;
+    
+    _saveAndReturn(food, res);
+}
 
-            res.status(response.status).json(response.message);
-        });
-    }
+const fullUpdateFood = function(req, res){
+    _update(req, res, _fullUpdateFood)
+}
 
-    _updateOne(req, res, foodUpdate)
+
+const _fullUpdateFood = function(req, res, food){
+    food.name = req.body.name;
+    food.origin = req.body.origin;
+    food.description = req.body.description;
+    
+    _saveAndReturn(food, res);
+}
+
+const _saveAndReturn =  function(food, res){
+    food.save(function(err, updatedFood){
+        const response = {status:204, message: {}};
+        if(err){
+            console.log("Error", err);
+            response.status = 500;
+            response.message = {message :"Internal server error"};
+        }else{
+            response.status = 202;
+            response.message = updatedFood;
+        }
+
+        res.status(response.status).json(response.message);
+    });
 }
 
 const deleteone = function(req, res){
@@ -131,6 +166,7 @@ module.exports = {
     getAll,
     getOne,
     addOne,
-    updateOne,
+    partialUpdateFood,
+    fullUpdateFood,
     deleteone
 }

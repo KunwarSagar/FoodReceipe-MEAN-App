@@ -7,7 +7,8 @@ router.route('/foods')
 
 router.route('/foods/:foodId')
     .get(foodController.getOne)
-    .put(foodController.updateOne)
+    .put(foodController.fullUpdateFood)
+    .patch(foodController.partialUpdateFood)
     .delete(foodController.deleteone);
 
 router.route('/foods/:foodId/ingredients')
