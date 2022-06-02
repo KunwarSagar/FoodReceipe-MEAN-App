@@ -17,7 +17,8 @@ router.route('/foods/:foodId/ingredients')
 
 router.route('/foods/:foodId/ingredients/:ingredientId')
     .get(ingredientController.getOne)
-    .put(ingredientController.updateOne)
+    .put(ingredientController.fullUpdateIngredient)
+    .patch(ingredientController.partialUpdateIngredient)
     .delete(ingredientController.deleteOne);
 
 module.exports = router;

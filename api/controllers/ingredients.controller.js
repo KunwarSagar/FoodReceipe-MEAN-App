@@ -70,27 +70,7 @@ const _addIngredient = function(req, res, food){
     });
 }
 
-const updateOne = function(req, res){
-    const update = function(req, res, food, response){
-        const ingredientId = req.params.ingredientId;
-
-        let ing = response.message.id(ingredientId);
-            ing.name = req.body.ingredients[0]["name"];
-            ing.quantity = req.body.ingredients[0]["quantity"];
-
-        food.save(function(err, updatedFood){
-            const response = {status: 201, message:updatedFood.ingredients.id(ingredientId)}
-            if(err){
-                response.status = 500;
-                response.message = {message : "Internal server error."}
-            }
-            res.status(response.status).json(response.message);
-        });
-    }
-    _updateIngredient(req, res, update);
-}
-
-const _updateIngredient = function(req, res, update){
+const _update = function(req, res, updateIngredient){
     const foodId = req.params.foodId;
 
     Food.findById(foodId).select("ingredients").exec(function(err, food){
@@ -108,9 +88,48 @@ const _updateIngredient = function(req, res, update){
         if(response.status != 204){
             res.status(response.status).json(response.message);
         }
-        update(req, res, food, response);
+        updateIngredient(req, res, food, response);
     });
 
+}
+
+const _partialUpdateIngredient = function(req, res, food, response){
+    const ingredientId = req.params.ingredientId;
+
+    let ing = response.message.id(ingredientId);
+        ing.name = req.body.ingredients[0]["name"] ? req.body.ingredients[0]["name"] : ing.name;
+        ing.quantity = req.body.ingredients[0]["quantity"] ? req.body.ingredients[0]["quantity"] : ing.quantity;
+
+    _saveAndReturn(ingredientId, food, res);
+}
+
+const partialUpdateIngredient = function(req, res){
+    _update(req, res, _partialUpdateIngredient);
+}
+
+const _fullUpdateIngredient = function(req, res, food, response){
+    const ingredientId = req.params.ingredientId;
+
+    let ing = response.message.id(ingredientId);
+    ing.name = req.body.ingredients[0]["name"];
+    ing.quantity = req.body.ingredients[0]["quantity"];
+
+    _saveAndReturn(ingredientId, food, res);
+}
+
+const fullUpdateIngredient = function(req, res){
+    _update(req, res, _fullUpdateIngredient);
+}
+
+const _saveAndReturn= function(ingredientId, food, res){
+    food.save(function(err, updatedFood){
+        const response = {status: 201, message:updatedFood.ingredients.id(ingredientId)}
+        if(err){
+            response.status = 500;
+            response.message = {message : "Internal server error."}
+        }
+        res.status(response.status).json(response.message);
+    });
 }
 
 const deleteOne = function(req, res){
@@ -148,6 +167,7 @@ module.exports = {
     getAll,
     getOne,
     addOne,
-    updateOne,
+    partialUpdateIngredient,
+    fullUpdateIngredient,
     deleteOne
 }
