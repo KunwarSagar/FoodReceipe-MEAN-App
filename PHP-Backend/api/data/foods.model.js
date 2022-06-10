@@ -15,7 +15,8 @@ const foodSchema = mongoose.Schema({
         required : true
     },
     description : String,
-    ingredients : [ingredientSchema]
+    ingredients : [ingredientSchema],
+    imageUrl: String
 });
 
 mongoose.model(process.env.FOOD_MODEL, foodSchema, process.env.DB_FOOD_COLLECTION);

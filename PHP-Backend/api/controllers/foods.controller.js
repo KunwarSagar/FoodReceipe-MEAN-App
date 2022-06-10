@@ -106,6 +106,7 @@ const addOne = function (req, res) {
         name: req.body.name,
         origin: req.body.origin,
         description: req.body.description,
+        imageUrl:req.body.imageUrl,
         ingredients: req.body.ingredients
     };
 
@@ -164,6 +165,7 @@ const _partialUpdateFood = function (req, res, food) {
     food.name = req.body.name ? req.body.name : food.name;
     food.origin = req.body.origin ? req.body.origin : food.origin;
     food.description = req.body.description ? req.body.description : food.description;
+    food.imageUrl = req.body.imageUrl ? req.body.imageUrl : food.imageUrl;
     
     _saveAndReturn(food, res);
 }
@@ -177,6 +179,7 @@ const _fullUpdateFood = function (req, res, food) {
     food.name = req.body.name;
     food.origin = req.body.origin;
     food.description = req.body.description;
+    food.imageUrl = req.body.imageUrl;
     food.ingredients = req.body.ingredients;
 
     _saveAndReturn(food, res);
