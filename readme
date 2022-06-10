@@ -1,0 +1,14 @@
+#download/clone the repo
+
+#For Backend
+
+    #install
+        npm i
+    #start server
+        npm start
+
+#For Frontend
+    #install
+        npm i
+    #start app
+        npm start or ng serve
