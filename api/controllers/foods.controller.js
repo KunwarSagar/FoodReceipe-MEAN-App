@@ -1,5 +1,18 @@
 const Food = require("mongoose").model(process.env.FOOD_MODEL);
 
+const getSize = function(req, res){
+    const response = {status:204, message:{}};
+    Food.count().then(size => {
+        response.status = 200;
+        response.message = {size};
+    }).catch(err=>{
+        response.status = 500;
+        response.message = {message:"Somethig went wrong"};
+    }).finally(()=>{
+        res.status(response.status).json(response.message);
+    });
+}
+
 const getAll = function (req, res) {
     let count = parseInt(process.env.COUNT, process.env.RADIX);
     let offset = parseInt(process.env.OFFSET, process.env.RADIX);
@@ -13,6 +26,14 @@ const getAll = function (req, res) {
         offset = parseInt(req.query.offset, process.env.RADIX);
     }
 
+    let page = 1;
+
+    if(req.query && req.query.page){
+        page = parseInt(req.query.page, process.env.RADIX);
+        if(page > 1){
+            offset = count*(page-1);
+        }
+    }
     const response = { status: 204, message: {} };
 
     if (isNaN(offset) || isNaN(count)) {
@@ -34,6 +55,7 @@ const getAll = function (req, res) {
         .find()
         .skip(offset)
         .limit(count)
+        .sort({_id:-1})
         .exec()
         .then(foods => {
             if (!foods) {
@@ -136,12 +158,13 @@ const partialUpdateFood = function (req, res) {
     _update(req, res, _partialUpdateFood)
 }
 
+//we are not doing partial update for now
 const _partialUpdateFood = function (req, res, food) {
 
     food.name = req.body.name ? req.body.name : food.name;
     food.origin = req.body.origin ? req.body.origin : food.origin;
     food.description = req.body.description ? req.body.description : food.description;
-
+    
     _saveAndReturn(food, res);
 }
 
@@ -154,6 +177,7 @@ const _fullUpdateFood = function (req, res, food) {
     food.name = req.body.name;
     food.origin = req.body.origin;
     food.description = req.body.description;
+    food.ingredients = req.body.ingredients;
 
     _saveAndReturn(food, res);
 }
@@ -168,6 +192,7 @@ const _saveAndReturn = function (food, res) {
         .catch(err=>{
             response.status = 500;
             response.message = { message: "Update failed." };
+            console.log(err);
         })
         .finally(()=>{
             res.status(response.status).json(response.message);
@@ -191,6 +216,7 @@ const deleteone = function (req, res) {
 }
 
 module.exports = {
+    getSize,
     getAll,
     getOne,
     addOne,

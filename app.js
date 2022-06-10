@@ -5,6 +5,10 @@ const express = require("express");
 const router = require("./api/routes");
 const app = express();
 
+app.use(function(req,res, next){
+    // console.log(req.url);
+    next();
+});
 
 app.use("/api", function(req, res, next){
     res.header("Access-Control-Allow-Origin", "http://localhost:4200");

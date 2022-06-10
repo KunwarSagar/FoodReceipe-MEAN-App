@@ -5,6 +5,9 @@ router.route('/foods')
     .get(foodController.getAll)
     .post(foodController.addOne);
 
+router.route('/foods/size')
+    .get(foodController.getSize);
+
 router.route('/foods/:foodId')
     .get(foodController.getOne)
     .put(foodController.fullUpdateFood)
