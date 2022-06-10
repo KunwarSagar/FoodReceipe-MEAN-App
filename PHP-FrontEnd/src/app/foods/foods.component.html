@@ -1,0 +1,39 @@
+<main class="container">
+  <div class="row">
+    <div class="col">
+      <div *ngIf="foods.length > 0">
+        <button class="btn btn-secondary" routerLink="/foods/add">&#43; Add food</button>
+      </div>
+      <div class="mt-2">
+        <div class="row">
+          <div class="col-md-3 my-3" *ngFor="let food of foods; let i = index">
+            <div class="card card-bg">
+              <div class="card-header">
+                <h5 class="card-title">{{food.name}}</h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text">{{food.description | slice:0:70}}</p>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex">
+                  <a class="btn btn-info btn-xs me-1" routerLink="/foods/{{food._id}}">View Item</a>
+                  <a class="btn btn-danger btn-xs ms-1" (click)="delete(food._id)">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 my-5 text-center" *ngIf="foods.length == 0">
+            <p>No foods found.</p>
+            <div *ngIf="foods.length == 0">
+              <button class="btn btn-success" routerLink="/foods/add">&#43; Add food</button>
+            </div>
+          </div>
+          <div class="text-center" *ngIf="!isFirstPage || !isLastPage">
+            <button class="btn btn-primary btn-xs me-1" (click)="prev()" [disabled]="isFirstPage">&#8592; Previous Page</button>
+            <button class="btn btn-primary btn-xs ms-1" (click)="next()" [disabled]="isLastPage">Next Page &#8594;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
