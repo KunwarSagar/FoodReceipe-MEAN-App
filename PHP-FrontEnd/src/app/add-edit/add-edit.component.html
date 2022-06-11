@@ -26,9 +26,33 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
+                                    <label for="">Thumbnail</label>
+                                    <div>
+                                        <label class="d-inline-block border w-25 p-3 h5 bg-info cursor-pointer"
+                                            for="thumbnail">
+                                            {{foodImage == "" ? "Choose ":"Update "}}Thumbnail
+                                        </label>
+                                        <input hidden type="file" name="thumbnail" id="thumbnail"
+                                            ngModel (change)="selectImage($event)">
+                                        <img class="ms-3" src="{{foodImage}}" height="70" width="auto" *ngIf="!thumbnailImageBase64">
+                                        <img class="ms-3" src="{{thumbnailImageBase64}}" height="70" width="auto"
+                                            *ngIf="thumbnailImageBase64">
+                                    </div>
+                                    <div class="invalid-feedback" [ngStyle]="{display:isNotImage?'block':'none'}">
+                                        File type not supported. Suppported files are jpeg, jpg and png.
+                                    </div>
+                                    <div class="invalid-feedback" [ngStyle]="{display:isOverSizedImage?'block':'none'}">
+                                        File size should not exceed 5Mb.
+                                    </div>
+                                    <div class="invalid-feedback"
+                                        [ngStyle]="{display:required.thumbnail?'block':'none'}">
+                                        <p><b>Thumbnail is required.</b></p>
+                                    </div>
+                                </div>
+                                <div class="col-12">
                                     <label class="label-control" for="">Description:</label>
                                     <textarea class="form-control" placeholder="Description" name="description"
-                                        [(ngModel)]="food.description"></textarea>
+                                        [(ngModel)]="food.description" rows="4"></textarea>
                                 </div>
                                 <p class="mt-3">Ingredients</p>
                                 <div class="input-group mb-3" *ngFor="let ingredient of food.ingredients;let i = index">
@@ -41,7 +65,8 @@
                                         (click)="deleteInputField(i)">&#45;</span>
                                 </div>
                                 <div class="col-12" *ngIf="required.ingredients">
-                                    <div class="invalid-feedback" [ngStyle]="{display:required.ingredients?'block':'none'}">
+                                    <div class="invalid-feedback"
+                                        [ngStyle]="{display:required.ingredients?'block':'none'}">
                                         <p><b>Please fill all the fields.</b></p>
                                     </div>
                                 </div>

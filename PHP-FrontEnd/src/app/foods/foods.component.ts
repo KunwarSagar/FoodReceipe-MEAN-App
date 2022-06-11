@@ -8,19 +8,22 @@ export class Food {
   _id!: string;
   name!: string;
   origin!: string;
+  imageUrl!:any;
   ingredients!: [
     {
-      name: string,
       // _id: string,
+      name: string,
       quantity: string
     }
   ];
   description!: string;
-  constructor(name: string, origin: string, description: string, ingredients: any) {
+
+  constructor(name: string, origin: string, description: string, imageUrl: string, ingredients: any) {
     this.name = name;
     this.origin = origin;
     this.description = description;
     this.ingredients = ingredients;
+    this.imageUrl = imageUrl;
   }
 }
 

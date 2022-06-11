@@ -13,12 +13,6 @@ export class FoodService {
 
   constructor(private http:HttpClient) { }
 
-  getHeaders(){
-    return new HttpHeaders({
-      'Content-Type':'application/json'
-    });
-  }
-
   public getAll(page:number = 1):Observable<Food[]>{
     let url = this.baseUrl + "/foods";
     if(page > 1){
@@ -35,13 +29,17 @@ export class FoodService {
     return this.http.get<Food>(this.baseUrl + "/foods/"+foodId);
   }
 
-  public addUpdateFood(food:Food, isUpdate:boolean):Observable<Food>{
+  public addUpdateFood(food:FormData, isUpdate:boolean):Observable<Food>{
     let url = this.baseUrl + "/foods";
     if(isUpdate){
-      return this.http.put<Food>(url+"/"+food._id, food, {headers:this.getHeaders()});
+      return this.http.put<Food>(url+"/"+food.get('_id'), food);
     }else{      
-      return this.http.post<Food>(url, food, {headers:this.getHeaders()});
+      return this.http.post<Food>(url, food);
     }
+  }
+
+  public addThumbnail(thumbnail:FormData):Observable<Food>{
+    return this.http.post<Food>(this.baseUrl+"/foods/addThumbnail", thumbnail);
   }
 
   public deleteFood(foodId:string):Observable<Food>{

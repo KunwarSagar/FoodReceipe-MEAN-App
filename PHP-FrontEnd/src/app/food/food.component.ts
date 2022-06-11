@@ -13,7 +13,7 @@ export class FoodComponent implements OnInit {
   food!:Food;
 
   constructor(private route:ActivatedRoute, private foodService:FoodService, private router:Router) {
-    this.food = new Food("", "", "",[]);
+    this.food = new Food("", "", "", "",[]);
    }
 
   ngOnInit(): void {
