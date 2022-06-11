@@ -106,8 +106,8 @@ const addOne = function (req, res) {
         name: req.body.name,
         origin: req.body.origin,
         description: req.body.description,
-        imageUrl:req.body.imageUrl,
-        ingredients: req.body.ingredients
+        ingredients: JSON.parse(req.body.ingredients),
+        imageUrl:req.file.path
     };
 
     const response = { status: 204, message: {} };
@@ -115,7 +115,7 @@ const addOne = function (req, res) {
         .create(food)
         .then(addedFood => {
             response.status = 201;
-            response.message = food;
+            response.message = addedFood;
         })
         .catch(err => {
             response.status = 500;
@@ -174,13 +174,12 @@ const fullUpdateFood = function (req, res) {
     _update(req, res, _fullUpdateFood)
 }
 
-
 const _fullUpdateFood = function (req, res, food) {
     food.name = req.body.name;
     food.origin = req.body.origin;
     food.description = req.body.description;
-    food.imageUrl = req.body.imageUrl;
-    food.ingredients = req.body.ingredients;
+    food.imageUrl = req.body.imageUrl ? req.body.imageUrl : req.file.path;
+    food.ingredients = JSON.parse(req.body.ingredients);
 
     _saveAndReturn(food, res);
 }
@@ -223,6 +222,7 @@ module.exports = {
     getAll,
     getOne,
     addOne,
+    // addThumbnail,
     partialUpdateFood,
     fullUpdateFood,
     deleteone
