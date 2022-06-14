@@ -55,8 +55,6 @@ export class FoodService {
       }
     }
 
-    console.log(url);
-    
     return this.http.get<Food[]>(url);
   }
 

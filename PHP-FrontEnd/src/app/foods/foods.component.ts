@@ -41,8 +41,14 @@ export class FoodsComponent implements OnInit {
   isLastPage!: boolean;
 
   baseUrl: string = environment.API_BASE_URL;
-
+  queryParams: any = {
+    searchString: "",
+    count: environment.ITEMS_COUNT_PER_PAGE,
+    offset: environment.ITEMS_OFFSET,
+    page: 1
+  }
   constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router) { }
+
 
   ngOnInit(): void {
     /**
@@ -50,18 +56,17 @@ export class FoodsComponent implements OnInit {
      * get new Foods or know the kind of page it is, like first or last or any other
      */
     this.route.queryParams.subscribe(params => {
-      const queryParams = {
+      this.queryParams = {
         searchString: params['searchString'] ? params['searchString'] : "",
-        count: params['count'] ? parseInt(params['count']) : environment.ITEMS_COUNT_PER_PAGE,
-        offset: params['offset'] ? parseInt(params['offset']) : environment.ITEMS_OFFSET,
+        count: params['count'] ? parseInt(params['count'], environment.RADIX) : this.queryParams.count,
+        offset: params['offset'] ? parseInt(params['offset'], environment.RADIX) : this.queryParams.offset,
         page: params['page'] ? parseInt(params['page'], environment.RADIX) : this.pageNumber
       }
 
-      this.pageNumber = queryParams.page;
-      this.setPages();
+      this.setPages(this.queryParams);
 
-      if (queryParams.searchString != "" || queryParams.count > 0 || queryParams.offset > 0) {
-        this.getFoods(queryParams);
+      if (this.queryParams.searchString != "" || this.queryParams.count > 0 || this.queryParams.offset > 0) {
+        this.getFoods(this.queryParams);
       } else {
         this.getFoods();
       }
@@ -71,10 +76,12 @@ export class FoodsComponent implements OnInit {
   /**
    * set page values like if the page is firstpage or lastpage
    */
-  setPages(): void {
+  setPages(queryParams: any = { searchString: "", count: 0, offset: 0, page: 1 }): void {
+    this.pageNumber = queryParams.page;
+
     this.foodService.getSize().subscribe({
       next: foods => {
-        this.totalPage = Math.ceil(parseInt(foods.size) / environment.ITEMS_COUNT_PER_PAGE);
+        this.totalPage = Math.ceil(parseInt(foods.size) / queryParams.count);
         this.isFirstPage = this.pageNumber == 1 ? true : false;
         this.isLastPage = this.pageNumber >= this.totalPage ? true : false;
       }
@@ -86,17 +93,13 @@ export class FoodsComponent implements OnInit {
    * @param queryParams :any
    * Get all the foods from service based on the params
    */
-  getFoods(queryParams:any = {searchString: "", count: 0, offset: 0, page:1}): void {
+  getFoods(queryParams: any = { searchString: "", count: 0, offset: 0, page: 1 }): void {
     this.foodService.getAll(queryParams).subscribe(foods => {
       // there is no items in page greater than 1
-      if (foods.length == 0 && this.pageNumber > 1) {
-        // this.pageNumber -= 1;
-        console.log(this.foods);
-        
-        // this.router.navigate(['/foods'], { queryParams: { 'page': this.pageNumber } });
-      } else {
-        this.foods = foods;
-      }
+      // if (foods.length == 0 && this.pageNumber > 1) {
+      // this.router.navigate(['/foods'], { queryParams: { 'page': this.pageNumber } });
+      // }
+      this.foods = foods;
     });
   }
 
@@ -129,7 +132,8 @@ export class FoodsComponent implements OnInit {
       return;
     } else {
       this.pageNumber -= 1;
-      this.router.navigate(['/foods'], { queryParams: { 'page': this.pageNumber } });
+      this.queryParams.page = this.pageNumber;
+      this.redirectTo('/foods');
     }
   }
 
@@ -144,7 +148,13 @@ export class FoodsComponent implements OnInit {
       return;
     } else {
       this.pageNumber += 1;
-      this.router.navigate(['/foods'], { queryParams: { 'page': this.pageNumber } });
+      this.queryParams.page = this.pageNumber;
+      this.redirectTo('/foods');
     }
+  }
+
+  redirectTo(uri: string) {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+      this.router.navigate([uri], { queryParams: this.queryParams }));
   }
 }
