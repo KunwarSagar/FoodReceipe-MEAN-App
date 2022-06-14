@@ -1,8 +1,19 @@
 <main class="p-5">
-    <div>
-        <p>
-            Welcome to Food Receipe App!
-        </p>
+    <div class="row text-center mt-5 search-block">
+        <form #searchForm="ngForm" (ngSubmit)="search()">
+            <h4 class="mt-5">Search the receipe of your favorite food.</h4>
+            <div class="col-lg-6 mx-auto mt-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Name of the food..." name="searchQuery"
+                    ngModel />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="submit">Search</button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row text-center mt-5 info-block">
+        <p>Welcome to Foodies. Here you can find all <br> kind of food receipes from all over the world.</p>
     </div>
 </main>
-

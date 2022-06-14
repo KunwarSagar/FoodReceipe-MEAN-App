@@ -1,7 +1,8 @@
-.card{
-    min-height: 186px;
+.foodCards{
+    flex: 0 0 auto;
+    width: 20%;
 }
-
-/* .card-bg{
-    background-color: rgb(255, 255, 255);
-} */
+.foodCards .card{
+    min-height: 340px;
+    max-height: 340px;
+}

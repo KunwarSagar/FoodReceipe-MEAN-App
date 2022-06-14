@@ -1,25 +1,26 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <button class="btn btn-secondary" routerLink="/foods">&#8592; Go Back</button>
-            <div class="mt-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="text-white">Food Name: {{food.name}}</h5>
+            <app-go-back></app-go-back>
+            <div class="mt-3 food_area">
+                <div class="card bg-transparent">
+                    <div class="card-header bg-transparent">
+                        <h5 class="text-white h3"><b>Food Name: {{food.name}}</b></h5>
                     </div>
                     <div class="card-body text-white">
-                        <p class="card-text lead">
-                            <b>Origin: </b> <em>{{food.origin}}</em> <br>
-                            <b>Description: </b> <em>{{food.description}}</em><br>
-                            <b>Ingredients:</b>
-                        </p>
-                        <ul class="list-group">
-                            <li class="list-group-item" *ngFor="let ing of food.ingredients">
-                                <small>- {{ing.name}} - {{ing.quantity}}</small>
-                            </li>
-                        </ul>
+                        <div class="food_details">
+                            <p class="card-text lead">
+                                <b>Origin: </b> <em>{{food.origin}}</em> <br><br>
+                                <b>Description: </b> <em>{{food.description}}</em><br><br>
+                                <b>Ingredients:</b>
+                                <li class="list-group-item bg-transparent" *ngFor="let ing of food.ingredients">
+                                    <small>- {{ing.name}} - {{ing.quantity}}</small>
+                                </li>
+                            </p>
+                            <img class="food__thumbnail" src="{{imageUrl}}" height="400px" width="auto">
+                        </div>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer bg-transparent">
                         <a class="btn btn-info btn-xs me-1" routerLink="/foods/{{food._id}}/edit">&#9998; Edit Item</a>
                         <a class="btn btn-danger btn-xs ms-1" (click)="delete()">Delete</a>
                     </div>

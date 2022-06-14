@@ -1,7 +1,10 @@
-main{
-    display: flex;
-    justify-content: center;
-}
 p{
     font-size: 25px;
+}
+.search-block{
+    min-height: 300px;
+}
+
+.info-block{
+    min-height: 300px;
 }

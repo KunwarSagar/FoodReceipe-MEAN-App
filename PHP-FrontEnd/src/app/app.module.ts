@@ -11,6 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { NavComponent } from './nav/nav.component';
 import { FormsModule } from '@angular/forms';
 import { AddEditComponent } from './add-edit/add-edit.component';
+import { GoBackComponent } from './go-back/go-back.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AddEditComponent } from './add-edit/add-edit.component';
     FoodsComponent,
     FooterComponent,
     NavComponent,
-    AddEditComponent
+    AddEditComponent,
+    GoBackComponent
   ],
   imports: [
     BrowserModule,

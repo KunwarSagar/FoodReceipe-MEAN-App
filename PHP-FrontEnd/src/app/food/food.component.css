@@ -1,0 +1,12 @@
+.food_area{
+    border: 1px !important;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px 0px white;
+}
+.food_details{
+    display: flex;
+    justify-content: space-between;
+}
+.food__thumbnail{
+    border-radius: 5px;
+}

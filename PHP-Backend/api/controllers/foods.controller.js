@@ -1,14 +1,14 @@
 const Food = require("mongoose").model(process.env.FOOD_MODEL);
 
-const getSize = function(req, res){
-    const response = {status:204, message:{}};
+const getSize = function (req, res) {
+    const response = { status: 204, message: {} };
     Food.count().then(size => {
         response.status = 200;
-        response.message = {size};
-    }).catch(err=>{
+        response.message = { size };
+    }).catch(err => {
         response.status = 500;
-        response.message = {message:"Somethig went wrong"};
-    }).finally(()=>{
+        response.message = { message: "Somethig went wrong" };
+    }).finally(() => {
         res.status(response.status).json(response.message);
     });
 }
@@ -28,12 +28,20 @@ const getAll = function (req, res) {
 
     let page = 1;
 
-    if(req.query && req.query.page){
+    if (req.query && req.query.page) {
         page = parseInt(req.query.page, process.env.RADIX);
-        if(page > 1){
-            offset = count*(page-1);
+        if (page > 1) {
+            offset = count * (page - 1);
         }
     }
+
+    // search by food
+    let searchValue = "";
+    if (req.query && req.query.searchString) {
+        searchValue = req.query.searchString;
+    }
+    let query =  searchValue ? {name : { $regex: '.*' + searchValue + '.*',$options: 'i' }} : null;
+
     const response = { status: 204, message: {} };
 
     if (isNaN(offset) || isNaN(count)) {
@@ -52,10 +60,10 @@ const getAll = function (req, res) {
     }
 
     Food
-        .find()
+        .find(query)
         .skip(offset)
         .limit(count)
-        .sort({_id:-1})
+        .sort({ _id: -1 })
         .exec()
         .then(foods => {
             if (!foods) {
@@ -107,7 +115,7 @@ const addOne = function (req, res) {
         origin: req.body.origin,
         description: req.body.description,
         ingredients: JSON.parse(req.body.ingredients),
-        imageUrl:req.file.path
+        imageUrl: req.file.path
     };
 
     const response = { status: 204, message: {} };
@@ -166,7 +174,7 @@ const _partialUpdateFood = function (req, res, food) {
     food.origin = req.body.origin ? req.body.origin : food.origin;
     food.description = req.body.description ? req.body.description : food.description;
     food.imageUrl = req.body.imageUrl ? req.body.imageUrl : food.imageUrl;
-    
+
     _saveAndReturn(food, res);
 }
 
@@ -187,16 +195,16 @@ const _fullUpdateFood = function (req, res, food) {
 const _saveAndReturn = function (food, res) {
     const response = { status: 204, message: {} };
     food.save()
-        .then(updatedFood=>{
+        .then(updatedFood => {
             response.status = 202;
             response.message = updatedFood;
         })
-        .catch(err=>{
+        .catch(err => {
             response.status = 500;
             response.message = { message: "Update failed." };
             console.log(err);
         })
-        .finally(()=>{
+        .finally(() => {
             res.status(response.status).json(response.message);
         });
 }
