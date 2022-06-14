@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="card mt-5">
+            <form class="form-group" action="" [formGroup]="registrationForm" (ngSubmit)="register()">
+                <!-- //we can also Password data to register() function -->
+                <div>
+                    <label class="label-control" for="">Name:</label>
+                    <input class="form-control" placeholder="name" formControlName="name"/>
+                </div>
+                <div>
+                    <label class="label-control" for="">Username:</label>
+                    <input class="form-control" placeholder="username" formControlName="username"/>
+                </div>
+                <div>
+                    <label class="label-control" for="">Password:</label>
+                    <input type="password" class="form-control" placeholder="password" formControlName="password"/>
+                </div>
+                <div>
+                    <label class="label-control" for="">Repeat Password:</label>
+                    <input type="password" class="form-control" placeholder="repeat password" formControlName="repeatPassword"/>
+                </div>
+                <div class="m-3 text-center">
+                    <button class="btn btn-info">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

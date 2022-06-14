@@ -9,9 +9,11 @@ import { RouterModule } from '@angular/router';
 import { FoodsComponent } from './foods/foods.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavComponent } from './nav/nav.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { GoBackComponent } from './go-back/go-back.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { GoBackComponent } from './go-back/go-back.component';
     FooterComponent,
     NavComponent,
     AddEditComponent,
-    GoBackComponent
+    GoBackComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -31,8 +35,13 @@ import { GoBackComponent } from './go-back/go-back.component';
       {
         path:"",
         component:HomeComponent,
-      },
-      {
+      },{
+        path:"login",
+        component:LoginComponent
+      },{
+        path:"register",
+        component:RegisterComponent
+      },{
         path:"foods",
         component:FoodsComponent
       },{
@@ -47,6 +56,7 @@ import { GoBackComponent } from './go-back/go-back.component';
       }
     ]),
     FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
