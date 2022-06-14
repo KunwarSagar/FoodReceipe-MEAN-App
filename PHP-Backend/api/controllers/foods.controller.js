@@ -230,7 +230,6 @@ module.exports = {
     getAll,
     getOne,
     addOne,
-    // addThumbnail,
     partialUpdateFood,
     fullUpdateFood,
     deleteone
