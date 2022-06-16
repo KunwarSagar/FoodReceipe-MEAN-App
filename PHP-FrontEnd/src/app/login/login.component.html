@@ -1,20 +1,25 @@
-<div class="container">
+<main class="container">
     <div class="row">
-        <div class="card mt-5">
-            <form class="form-group" #loginForm="ngForm" (ngSubmit)="login()">
-                <div>
-                    <label class="label-control" for="">Username:</label>
-                    <input class="form-control" placeholder="username" name="username" [(ngModel)]="userCredentials.username" />
-                </div>
-                <div>
-                    <label class="label-control" for="">Password:</label>
-                    <input type="password" class="form-control" placeholder="password" name="password" [(ngModel)]="userCredentials.password" />
-                </div>
-            
-                <div class="m-3 text-center">
-                    <button class="btn btn-info">Login</button>
-                </div>
-            </form>
+        <div class="col">
+            <div class="card mx-auto mt-5 p-3 w-50">
+                <form class="form-group" #loginForm="ngForm" (ngSubmit)="login()">
+                    <h5 class="text-center">Login</h5>
+                    <div class="my-2">
+                        <label class="label-control" for="">Username:</label>
+                        <input class="form-control" placeholder="username" name="username"
+                            [(ngModel)]="userCredentials.username" />
+                    </div>
+                    <div class="my-2">
+                        <label class="label-control" for="">Password:</label>
+                        <input type="password" class="form-control" placeholder="password" name="password"
+                            [(ngModel)]="userCredentials.password" />
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button class="btn btn-info">Login</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</main>

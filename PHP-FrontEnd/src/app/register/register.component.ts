@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-register',
@@ -9,17 +10,28 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class RegisterComponent implements OnInit {
   registrationForm!:FormGroup;
 
-  constructor(private formBuilder:FormBuilder) {
+  constructor(private formBuilder:FormBuilder, private usersService:UsersService) {
     this.registrationForm = formBuilder.group({
-        name : "Sagar",
-        username: "aquaman",
-        password:"password",
-        repeatPassword:"password"
+        name : "",
+        email : "",
+        username: "",
+        password:"",
+        repeatPassword:""
     });}
 
   ngOnInit(): void {
   }
   register():void{
-    console.log("Form ", this.registrationForm.value);
+    this.usersService.addUser(this.registrationForm.value).subscribe({
+      next:(user) =>{
+        console.log(user);
+      },
+      error:(err) =>{
+        console.log(err);
+      },
+      complete: ()=>{
+        console.log("response received");
+      }
+    });
   }
 }

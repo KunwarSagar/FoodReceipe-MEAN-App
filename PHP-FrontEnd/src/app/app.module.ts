@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { FoodComponent } from './food/food.component';
-import { RouterModule } from '@angular/router';
 import { FoodsComponent } from './foods/foods.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavComponent } from './nav/nav.component';
@@ -56,7 +57,8 @@ import { RegisterComponent } from './register/register.component';
       }
     ]),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JwtHelperService
   ],
   providers: [],
   bootstrap: [AppComponent]

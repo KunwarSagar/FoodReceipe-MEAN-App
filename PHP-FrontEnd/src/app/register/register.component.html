@@ -1,28 +1,35 @@
-<div class="container">
+<main class="container">
     <div class="row">
-        <div class="card mt-5">
-            <form class="form-group" action="" [formGroup]="registrationForm" (ngSubmit)="register()">
-                <!-- //we can also Password data to register() function -->
-                <div>
-                    <label class="label-control" for="">Name:</label>
-                    <input class="form-control" placeholder="name" formControlName="name"/>
-                </div>
-                <div>
-                    <label class="label-control" for="">Username:</label>
-                    <input class="form-control" placeholder="username" formControlName="username"/>
-                </div>
-                <div>
-                    <label class="label-control" for="">Password:</label>
-                    <input type="password" class="form-control" placeholder="password" formControlName="password"/>
-                </div>
-                <div>
-                    <label class="label-control" for="">Repeat Password:</label>
-                    <input type="password" class="form-control" placeholder="repeat password" formControlName="repeatPassword"/>
-                </div>
-                <div class="m-3 text-center">
-                    <button class="btn btn-info">Register</button>
-                </div>
-            </form>
+        <div class="col">
+            <div class="card mx-auto mt-5 p-3 w-50">
+                <form class="form-group" action="" [formGroup]="registrationForm" (ngSubmit)="register()">
+                    <h5 class="text-center">Register</h5>
+                    <div class="my-2">
+                        <label class="label-control" for="">Name:</label>
+                        <input class="form-control" placeholder="name" formControlName="name" />
+                    </div>
+                    <div class="my-2">
+                        <label class="label-control" for="">Email:</label>
+                        <input class="form-control" placeholder="email" formControlName="email" />
+                    </div>
+                    <div class="my-2">
+                        <label class="label-control" for="">Username:</label>
+                        <input class="form-control" placeholder="username" formControlName="username" />
+                    </div>
+                    <div class="my-2">
+                        <label class="label-control" for="">Password:</label>
+                        <input type="password" class="form-control" placeholder="password" formControlName="password" />
+                    </div>
+                    <div class="my-2">
+                        <label class="label-control" for="">Repeat Password:</label>
+                        <input type="password" class="form-control" placeholder="repeat password"
+                            formControlName="repeatPassword" />
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button class="btn btn-info">Register</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</main>
