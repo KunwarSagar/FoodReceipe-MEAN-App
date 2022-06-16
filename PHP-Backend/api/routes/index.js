@@ -1,17 +1,8 @@
 const router = require("express").Router();
-const foodController = require("../controllers/foods.controller");
+const foodRoutes = require("./foods");
+const userRoutes = require("./users");
 
-router.route('/foods')
-    .get(foodController.getAll)
-    .post(foodController.addOne);
-
-router.route('/foods/size')
-    .get(foodController.getSize);
-
-router.route('/foods/:foodId')
-    .get(foodController.getOne)
-    .put(foodController.fullUpdateFood)
-    .patch(foodController.partialUpdateFood)
-    .delete(foodController.deleteone);
+router.use('/foods', foodRoutes);
+router.use('/users', userRoutes);
 
 module.exports = router;
