@@ -8,10 +8,6 @@ const app = express();
 
 const {storage, multer} = require("./_multer");
 const uploads = multer({storage:storage});
-app.use(function(req, res, next){
-    console.log(req.url);
-    next();
-});
 
 app.use("/api", function(req, res, next){
     res.header("Access-Control-Allow-Origin", "http://localhost:4200");
