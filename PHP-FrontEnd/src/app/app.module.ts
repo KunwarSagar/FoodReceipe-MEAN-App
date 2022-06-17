@@ -16,8 +16,8 @@ import { GoBackComponent } from './go-back/go-back.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { environment } from 'src/environments/environment';
-
 import { TokenService } from './token.service';
+import { NotFoundErorComponent } from './not-found-eror/not-found-eror.component';
 
 export function jwtOptionsFactory(tokenService:TokenService) {
   return {
@@ -41,7 +41,8 @@ export function jwtOptionsFactory(tokenService:TokenService) {
     AddEditComponent,
     GoBackComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    NotFoundErorComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +76,9 @@ export function jwtOptionsFactory(tokenService:TokenService) {
       },{
         path:"foods/:foodId/edit",
         component:AddEditComponent
+      },{
+        path:'**',
+        component:NotFoundErorComponent
       }
     ], {
       onSameUrlNavigation: 'reload'
