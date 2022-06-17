@@ -11,35 +11,44 @@ import { Food } from '../foods/foods.component';
 })
 export class FoodComponent implements OnInit {
 
-  food!:Food;
+  food!: Food;
 
-  imageUrl!:string;
+  imageUrl!: string;
 
-  constructor(private route:ActivatedRoute, private foodService:FoodService, private router:Router) {
-    this.food = new Food("", "", "", "",[]);
-   }
+  constructor(private route: ActivatedRoute, private foodService: FoodService, private router: Router) {
+    this.food = new Food("", "", "", "", []);
+  }
 
   ngOnInit(): void {
     const foodId = this.route.snapshot.params["foodId"];
-    this.foodService.getFood(foodId).subscribe(food => {
-      this.food = food;
-      this.imageUrl = environment.API_BASE_URL+"/"+food.imageUrl;
-    });
+      this.foodService.getFood(foodId).subscribe({
+        next: food => {
+          if (food) {
+            this.food = food;
+            this.imageUrl = environment.API_BASE_URL + "/" + food.imageUrl;
+          } else {
+            this.router.navigate(['/not-found']);
+          }
+        },
+        error: err => {
+          this.router.navigate(['/not-found']);
+        }
+      });
   }
 
   /**
    * Delete the food on clicking the delete button
    * We need a food Id for that
    */
-  delete():void{
+  delete(): void {
     this.foodService.deleteFood(this.food._id).subscribe({
-      next:food =>{
-        if(food == null){
+      next: food => {
+        if (food == null) {
           alert("Deleted");
           this.router.navigate(['/foods']);
         }
       },
-      error:err =>{
+      error: err => {
         alert("Something went wrong");
       }
     });
