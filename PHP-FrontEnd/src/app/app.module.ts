@@ -59,6 +59,9 @@ export function jwtOptionsFactory(tokenService:TokenService) {
         path:"",
         component:HomeComponent,
       },{
+        path:"home",
+        component:HomeComponent,
+      },{
         path:"login",
         component:LoginComponent
       },{

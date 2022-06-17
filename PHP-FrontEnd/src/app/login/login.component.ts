@@ -21,13 +21,16 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private usersServie: UsersService, private router: Router) { }
 
   ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.gotoHome();
+    }
   }
 
   login(): void {
     this.usersServie.login(this.loginForm.value).subscribe({
       next: (response) => {
         if (response.success) {
-          if(this.authService.login(response._token)){
+          if (this.authService.login(response._token)) {
             this.gotoHome();
             return;
           }
@@ -42,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   gotoHome(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate(['/']));
+      .then(() => this.router.navigate(['/home']));
   }
 
 }
