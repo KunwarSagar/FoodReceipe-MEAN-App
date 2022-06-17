@@ -16,7 +16,9 @@
                 <h5 class="card-title"> <b><a class="text-white" routerLink="/foods/{{food._id}}">{{food.name}}</a></b></h5>
                 <p class="card-text description">{{food.description}}</p>
               </div>
-              <fa-icon *ngIf="isLoggedIn" (click)="delete(food._id)" class="btn btn-danger btn-sm" [icon]="faTrash"></fa-icon>
+              <a *ngIf="isLoggedIn" (click)="delete(food._id)" class="btn btn-danger btn-sm">
+                <fa-icon [icon]="faTrash"></fa-icon> Delete
+              </a>
             </div>
           </div>
           <div class="col-12 my-5 text-center" *ngIf="foods.length == 0">
