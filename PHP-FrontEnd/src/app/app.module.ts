@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+import { JwtModule,JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -10,11 +11,24 @@ import { FoodComponent } from './food/food.component';
 import { FoodsComponent } from './foods/foods.component';
 import { FooterComponent } from './footer/footer.component';
 import { NavComponent } from './nav/nav.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddEditComponent } from './add-edit/add-edit.component';
 import { GoBackComponent } from './go-back/go-back.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { environment } from 'src/environments/environment';
+
+import { TokenService } from './token.service';
+
+export function jwtOptionsFactory(tokenService:TokenService) {
+  return {
+    tokenGetter: () => {
+      return tokenService.token;
+    },
+    allowedDomains: [environment.API_BASE_URL],
+    throwNoTokenError: true,
+    skipWhenExpired: true,
+  }
+}
 
 @NgModule({
   declarations: [
@@ -32,6 +46,13 @@ import { RegisterComponent } from './register/register.component';
   imports: [
     BrowserModule,
     HttpClientModule,
+    JwtModule.forRoot({
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [TokenService]
+      }
+    }),
     RouterModule.forRoot([
       {
         path:"",
@@ -55,10 +76,11 @@ import { RegisterComponent } from './register/register.component';
         path:"foods/:foodId/edit",
         component:AddEditComponent
       }
-    ]),
+    ], {
+      onSameUrlNavigation: 'reload'
+    }),
     FormsModule,
-    ReactiveFormsModule,
-    JwtHelperService
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
