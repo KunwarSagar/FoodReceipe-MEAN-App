@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { JwtModule,JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -19,12 +19,12 @@ import { environment } from 'src/environments/environment';
 import { TokenService } from './token.service';
 import { NotFoundErorComponent } from './not-found-eror/not-found-eror.component';
 
-export function jwtOptionsFactory(tokenService:TokenService) {
+export function jwtOptionsFactory(tokenService: TokenService) {
   return {
     tokenGetter: () => {
       return tokenService.token;
     },
-    allowedDomains: [environment.API_BASE_URL],
+    allowedDomains: [environment.API_DOMAIN],
     throwNoTokenError: true,
     skipWhenExpired: true,
   }
@@ -56,32 +56,32 @@ export function jwtOptionsFactory(tokenService:TokenService) {
     }),
     RouterModule.forRoot([
       {
-        path:"",
-        component:HomeComponent,
-      },{
-        path:"home",
-        component:HomeComponent,
-      },{
-        path:"login",
-        component:LoginComponent
-      },{
-        path:"register",
-        component:RegisterComponent
-      },{
-        path:"foods",
-        component:FoodsComponent
-      },{
-        path:"foods/add",
-        component:AddEditComponent
-      },{
-        path:"foods/:foodId",
-        component:FoodComponent
-      },{
-        path:"foods/:foodId/edit",
-        component:AddEditComponent
-      },{
-        path:'**',
-        component:NotFoundErorComponent
+        path: "",
+        component: HomeComponent,
+      }, {
+        path: "home",
+        component: HomeComponent,
+      }, {
+        path: "login",
+        component: LoginComponent
+      }, {
+        path: "register",
+        component: RegisterComponent
+      }, {
+        path: "foods",
+        component: FoodsComponent
+      }, {
+        path: "foods/add",
+        component: AddEditComponent
+      }, {
+        path: "foods/:foodId",
+        component: FoodComponent
+      }, {
+        path: "foods/:foodId/edit",
+        component: AddEditComponent
+      }, {
+        path: '**',
+        component: NotFoundErorComponent
       }
     ], {
       onSameUrlNavigation: 'reload'
