@@ -109,6 +109,11 @@ export class FoodsComponent implements OnInit {
       // this.router.navigate(['/foods'], { queryParams: { 'page': this.pageNumber } });
       // }
       this.foods = foods;
+
+      // while searching if count is less than required per page, make this last page
+      if(this.foods.length < environment.ITEMS_COUNT_PER_PAGE){
+        this.isLastPage = true;
+      }
     });
   }
 
