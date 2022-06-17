@@ -1,48 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+
 import { AuthService } from '../auth.service';
-
-export class User{
-  #_name!:string;
-  #_email!:string;
-  #_username:string;
-  #_password:string;
-
-  constructor(username:string, password:string){
-    this.#_username = username;
-    this.#_password = password;
-  }
-
-  get name(){
-    return this.#_name;
-  }
-  set name(name){
-    this.#_name = name;
-  }
-
-  get email(){
-    return this.#_email;
-  }
-  set email(email){
-    this.#_email = email;
-  }
-
-  get username(){
-    return this.#_username;
-  }
-  set username(username){
-    this.#_username = username;
-  }
-
-  get password(){
-    return this.#_password;
-  }
-
-  set password(password){
-    this.#_password = password;
-  }
-}
+import { UsersService } from '../users.service';
 
 @Component({
   selector: 'app-login',
@@ -52,20 +13,36 @@ export class User{
 export class LoginComponent implements OnInit {
 
   @ViewChild("loginForm")
-  loginForm! : NgForm;
+  loginForm!: NgForm;
 
-  userCredentials:User = new User("", "");
+  username!: string;
+  password!: string;
 
-  constructor(private authService:AuthService) { }
+  constructor(private authService: AuthService, private usersServie: UsersService, private router: Router) { }
 
   ngOnInit(): void {
   }
 
+  login(): void {
+    this.usersServie.login(this.loginForm.value).subscribe({
+      next: (response) => {
+        if (response.success) {
+          if(this.authService.login(response._token)){
+            this.gotoHome();
+            return;
+          }
+        }
+        console.log("error");
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
+  }
 
-  login():void{
-    console.log(this.userCredentials);
-    // console.log(this.loginForm.value);
-
+  gotoHome(): void {
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate(['/']));
   }
 
 }
