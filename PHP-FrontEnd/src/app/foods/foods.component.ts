@@ -112,7 +112,7 @@ export class FoodsComponent implements OnInit {
     this.foodService.deleteFood(foodId).subscribe({
       next: food => {
         if (food == null) {
-          this.ngOnInit();
+          this.redirectTo('/foods');
         }
       },
       error: err => {
@@ -153,6 +153,10 @@ export class FoodsComponent implements OnInit {
     }
   }
 
+  /**
+   * Redirect to provided uri
+   * @param uri 
+   */
   redirectTo(uri: string) {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
       this.router.navigate([uri], { queryParams: this.queryParams }));
