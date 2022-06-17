@@ -20,9 +20,9 @@
                             <img class="food__thumbnail" src="{{imageUrl}}" height="400px" width="auto">
                         </div>
                     </div>
-                    <div class="card-footer bg-transparent">
+                    <div class="card-footer bg-transparent" *ngIf="isLoggedIn">
                         <a class="btn btn-info btn-xs me-1" routerLink="/foods/{{food._id}}/edit">&#9998; Edit Item</a>
-                        <a class="btn btn-danger btn-xs ms-1" (click)="delete()">Delete</a>
+                        <a class="btn btn-danger btn-xs ms-1" (click)="delete()"> <fa-icon [icon]="faTrash"></fa-icon> Delete</a>
                     </div>
                 </div>
             </div>

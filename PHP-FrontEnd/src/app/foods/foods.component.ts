@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { FoodService } from '../food.service';
+import { AuthService } from '../auth.service';
 
 export class Food {
   _id!: string;
@@ -34,6 +36,11 @@ export class Food {
 })
 export class FoodsComponent implements OnInit {
 
+  // fontawesonme icons
+  faTrash = faTrash;
+
+  isLoggedIn!:boolean;
+
   foods: Food[] = [];
   pageNumber: number = 1;
   totalPage!: number;
@@ -47,7 +54,9 @@ export class FoodsComponent implements OnInit {
     offset: environment.ITEMS_OFFSET,
     page: 1
   }
-  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService:AuthService) {
+    this.isLoggedIn = this.authService.isLoggedIn();
+   }
 
 
   ngOnInit(): void {

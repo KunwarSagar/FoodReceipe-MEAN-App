@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -25,8 +26,7 @@ export function jwtOptionsFactory(tokenService: TokenService) {
       return tokenService.token;
     },
     allowedDomains: [environment.API_DOMAIN],
-    throwNoTokenError: true,
-    skipWhenExpired: true,
+    skipWhenExpired: true
   }
 }
 
@@ -87,7 +87,8 @@ export function jwtOptionsFactory(tokenService: TokenService) {
       onSameUrlNavigation: 'reload'
     }),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

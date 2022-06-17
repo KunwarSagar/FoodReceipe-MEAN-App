@@ -7,18 +7,16 @@
       <div class="my-2">
         <div class="row mb-4">
           <div class="foodCards my-2" *ngFor="let food of foods; let i = index">
-            <div class="card card-bg">
-              <img class="card-img-top" src="{{baseUrl+'/'+food.imageUrl}}" [ngStyle]="{'height':'173.68px'}">
+            <div class="card card-bg" [ngStyle]="{'min-height': isLoggedIn?'320px':'290px'}">
+              <div class="card-image" routerLink="/foods/{{food._id}}">
+                <img class="card-img-top" src="{{baseUrl+'/'+food.imageUrl}}" [ngStyle]="{'height':'173.68px'}">
+                <div class="image-overlay"></div>
+              </div>
               <div class="card-body">
-                <h5 class="card-title">{{food.name}}</h5>
-                <p class="card-text">{{food.description | slice:0:40}}</p>
+                <h5 class="card-title"> <b><a class="text-white" routerLink="/foods/{{food._id}}">{{food.name}}</a></b></h5>
+                <p class="card-text description">{{food.description}}</p>
               </div>
-              <div class="card-footer bg-transparent">
-                <div class="d-flex">
-                  <a class="btn btn-info btn-xs me-1" routerLink="/foods/{{food._id}}">View Item</a>
-                  <a class="btn btn-danger btn-xs ms-1" (click)="delete(food._id)">Delete</a>
-                </div>
-              </div>
+              <fa-icon *ngIf="isLoggedIn" (click)="delete(food._id)" class="btn btn-danger btn-sm" [icon]="faTrash"></fa-icon>
             </div>
           </div>
           <div class="col-12 my-5 text-center" *ngIf="foods.length == 0">

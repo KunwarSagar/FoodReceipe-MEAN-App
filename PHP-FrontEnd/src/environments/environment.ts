@@ -6,7 +6,6 @@ export const environment = {
   production: false,
   API_DOMAIN : "localhost:8000",
   API_BASE_URL : "http://localhost:8000/api",
-
   ITEMS_COUNT_PER_PAGE : 10,
   ITEMS_OFFSET : 0,
   RADIX : 10
