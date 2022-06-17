@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../auth.service';
 
 import { FoodService } from '../food.service';
 import { Food } from '../foods/foods.component';
@@ -36,20 +37,31 @@ export class AddEditComponent implements OnInit {
   isOverSizedImage: boolean = false;
   acceptableExtensions: string[] = ["image/png", "image/jpg", "image/jpeg"];
 
-  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router) {
+  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService:AuthService) {
     this.food = new Food("", "", "", "", [{ name: "", quantity: "" }]);
   }
 
   ngOnInit(): void {
-    const foodId = this.route.snapshot.params['foodId'];
-    if (foodId && Object.prototype.toString.call(foodId) === "[object String]") {
-      this.required.thumbnail = false;
-      this.getFood(foodId);
+    if(!this.authService.isLoggedIn()){
+      this.goToLogin()
+    }else{
+      const foodId = this.route.snapshot.params['foodId'];
+      if (foodId && Object.prototype.toString.call(foodId) === "[object String]") {
+        this.required.thumbnail = false;
+        this.getFood(foodId);
+      }
     }
   }
+
+  goToLogin() {
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate(['/login']));
+  }
+
   setUpdate(): void {
     this.isUpdate = true;
   }
+  
   getFood(foodId: string): void {
     this.foodService.getFood(foodId).subscribe({
       next: food => {
