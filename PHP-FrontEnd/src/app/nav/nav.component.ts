@@ -29,6 +29,9 @@ export class NavComponent implements OnInit {
     this.setName();
   }
 
+  /**
+   * set name to show in the navigation
+   */
   setName() {
     if (this.isLoggedIn) {
       let jwtService = new JwtHelperService();
@@ -39,11 +42,18 @@ export class NavComponent implements OnInit {
     }
   }
 
+  /**
+   * redirect to foods
+   */
   goToFoods(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate(['/foods']));
   }
 
+  /**
+   * on click logout
+   * @returns 
+   */
   logout(): void {
     if (this.authService.logout()) {
       this.setName();
@@ -53,6 +63,10 @@ export class NavComponent implements OnInit {
       alert(environment.LOGOUT_FAILED)
     }
   }
+
+  /**
+   * redirect to login
+   */
   gotoLogin(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate(['/login']));

@@ -13,6 +13,11 @@ export class FoodService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * ger all foods api
+   * @param queryParams 
+   * @returns 
+   */
   public getAll(queryParams: any = {searchString: "", count: 0, offset: 0, page:1}): Observable<Food[]> {
     let url = this.baseUrl + "/foods";
     let appendNewQuery = false;
@@ -58,14 +63,29 @@ export class FoodService {
     return this.http.get<Food[]>(url);
   }
 
+  /**
+   * get size of the total foods api
+   * @returns 
+   */
   public getSize(): Observable<any> {
     return this.http.get<any>(this.baseUrl + "/foods/size");
   }
 
+  /**
+   * get single food api
+   * @param foodId 
+   * @returns 
+   */
   public getFood(foodId: string): Observable<Food> {
     return this.http.get<Food>(this.baseUrl + "/foods/" + foodId);
   }
 
+  /**
+   * add or update food api
+   * @param food 
+   * @param isUpdate 
+   * @returns 
+   */
   public addUpdateFood(food: FormData, isUpdate: boolean): Observable<Food> {
     let url = this.baseUrl + "/foods";
     if (isUpdate) {
@@ -75,10 +95,11 @@ export class FoodService {
     }
   }
 
-  public addThumbnail(thumbnail: FormData): Observable<Food> {
-    return this.http.post<Food>(this.baseUrl + "/foods/addThumbnail", thumbnail);
-  }
-
+  /**
+   * delete food api
+   * @param foodId 
+   * @returns 
+   */
   public deleteFood(foodId: string): Observable<Food> {
     return this.http.delete<Food>(this.baseUrl + "/foods/" + foodId);
   }

@@ -19,6 +19,9 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * search based on the given search string
+   */
   search():void{
     const searchString = this.searchForm.value.searchQuery;
     this.router.navigate(["foods"], {queryParams:{'searchString':searchString}});

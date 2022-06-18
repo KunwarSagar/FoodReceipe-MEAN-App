@@ -12,24 +12,45 @@ export class AuthService {
 
   constructor(private router: Router, private jwtService: JwtHelperService, private tokenService: TokenService) { }
 
+  /**
+   * check if token expred
+   * @returns 
+   */
   isTokenExpired(): boolean {
     return this.jwtService.isTokenExpired();
   }
 
+  /**
+   * when state changes emit event
+   * @returns 
+   */
   loggedInStateChanged(): EventEmitter<boolean> {
     return this.loggedIn;
   }
 
+  /**
+   * check if logged in
+   * @returns 
+   */
   isLoggedIn():boolean{
       return !this.isTokenExpired();
   }
 
+  /**
+   * login
+   * @param token 
+   * @returns 
+   */
   login(token: any): boolean {
     this.tokenService.token = token;
     this.loggedIn.emit(true);
     return this.isLoggedIn();
   }
 
+  /**
+   * logout
+   * @returns 
+   */
   logout(): boolean {
     this.tokenService.deleteToken();
     this.loggedIn.emit(false);

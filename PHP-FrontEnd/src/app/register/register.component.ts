@@ -80,6 +80,11 @@ export class RegisterComponent implements OnInit {
       }
     });
   }
+
+  /**
+   * check password length
+   * @returns 
+   */
   isNotValidPasswordLength() {
     if(this.registrationForm.value.password.length < environment.PASSWORD_LENGTH){
       return true;
@@ -87,6 +92,10 @@ export class RegisterComponent implements OnInit {
     return false;
   }
 
+  /**
+   * check if email
+   * @returns 
+   */
   isNotAnEmail() {
     if(!this.registrationForm.value.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/)){
       return true;
@@ -94,6 +103,10 @@ export class RegisterComponent implements OnInit {
     return false;
   }
 
+  /**
+   * check if fields are empty
+   * @returns 
+   */
   inputFieldsAreEmpty(): boolean {
     let hasError = false;
 

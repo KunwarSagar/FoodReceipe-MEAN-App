@@ -24,6 +24,9 @@ export class AddEditComponent implements OnInit {
   thumbnailImageBase64!: any;
   thumbnailImage: any = "";
 
+  /**
+   * calidation messages
+   */
   validationMessage:any = {
     name: environment.NAME_REQUIRES,
     origin: environment.ORIGIN_REQUIRED,
@@ -33,6 +36,9 @@ export class AddEditComponent implements OnInit {
     ingredients : environment.INGREDIENTS_REQUIRED,
   }
 
+  /**
+   * required fields
+   */
   required: any = {
     name: false,
     origin: false,

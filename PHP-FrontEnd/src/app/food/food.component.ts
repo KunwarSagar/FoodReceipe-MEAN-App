@@ -43,6 +43,7 @@ export class FoodComponent implements OnInit {
       }
     });
 
+    // get food by id 
     this.foodService.getFood(foodId).subscribe({
       next: food => {
         if (food) {

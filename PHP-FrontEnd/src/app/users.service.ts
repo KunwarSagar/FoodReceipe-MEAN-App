@@ -50,10 +50,21 @@ export class UsersService {
   
   constructor(private http:HttpClient) { }
   
+  /**
+   * register API
+   * @param userData 
+   * @returns 
+   */
   public addUser(userData:FormGroup):Observable<User>{
     return this.http.post<User>(this.baseUrl+'/users', userData);
   }
   
+
+  /**
+   * login api
+   * @param userCredentials 
+   * @returns 
+   */
   public login(userCredentials: NgForm):Observable<any> {
     return this.http.put<any>(this.baseUrl+"/users", userCredentials);
   }
