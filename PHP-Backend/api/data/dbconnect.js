@@ -5,15 +5,15 @@ require("./users.model")
 mongoose.connect(process.env.DB_URL, {useNewUrlParser : true, useUnifiedTopology: true});
 
 mongoose.connection.on("connected", function(){
-    console.log("Connected to DB", process.env.DB_NAME);
+    console.log(process.env.CONNECTED_MESSAGE, process.env.DB_NAME);
 });
 
 mongoose.connection.on("disconnected", function(){
-    console.log("Disconnected from DB");
+    console.log(process.env.DISCONNECTED_MESSAGE);
 });
 
 mongoose.connection.on("error", function(error){
-    console.log("Error connecting to DB", error);
+    console.log(process.env.DB_CONNECTION_ERROR, error);
 });
 
 process.on("SIGINT", function(){

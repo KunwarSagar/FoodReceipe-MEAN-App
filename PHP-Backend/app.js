@@ -9,19 +9,19 @@ const app = express();
 const {storage, multer} = require("./_multer");
 const uploads = multer({storage:storage});
 
-app.use("/api", function(req, res, next){
-    res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+app.use(process.env.API_PREFIX, function(req, res, next){
+    res.header("Access-Control-Allow-Origin", process.env.ALLOWED_ORIGIN);
+    res.header('Access-Control-Allow-Headers', process.env.ALLOWED_HEADERS);
+    res.header("Access-Control-Allow-Methods", process.env.ALLOWED_METHODS);
     next();
 });
 
 app.use(express.urlencoded({extended:true}));
 app.use(express.json())
-app.use(uploads.single('thumbnailImage'));
+app.use(uploads.single(process.env.THUMBNAIL_IMAGE_KEY));
 
-app.use("/api/public", express.static(path.join(__dirname, "public")));
-app.use('/api', router);
+app.use(process.env.STATIC_ASSET_ROUTE, express.static(path.join(__dirname, process.env.PUBLIC_DIRECTORY_NAME)));
+app.use(process.env.API_PREFIX, router);
 
 
 const server = app.listen(process.env.PORT, function(){

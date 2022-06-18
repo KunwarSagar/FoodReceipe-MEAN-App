@@ -21,4 +21,4 @@ const usersSchema =  mongoose.Schema({
     }
 });
 
-mongoose.model("User", usersSchema, "users");
+mongoose.model(process.env.USER_MODEL, usersSchema, process.env.DB_USER_COLLECTION);

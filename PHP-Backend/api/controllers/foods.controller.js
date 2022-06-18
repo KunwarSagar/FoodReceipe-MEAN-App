@@ -1,16 +1,11 @@
 const Food = require("mongoose").model(process.env.FOOD_MODEL);
 
 const getSize = function (req, res) {
-    const response = { status: 204, message: {} };
-    Food.count().then(size => {
-        response.status = 200;
-        response.message = { size };
-    }).catch(err => {
-        response.status = 500;
-        response.message = { message: "Somethig went wrong" };
-    }).finally(() => {
-        res.status(response.status).json(response.message);
-    });
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
+    Food.count()
+        .then(size => _fileResponse(process.env.GET_SUCCESS_CODE, { size }, response, process.env.FOOD_COUNT_FIND_ERROR))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.INTERNAL_ERROR_MESSAGE))
+        .finally(() => _sendResponse(res, response));
 }
 
 const getAll = function (req, res) {
@@ -40,22 +35,22 @@ const getAll = function (req, res) {
     if (req.query && req.query.searchString) {
         searchValue = req.query.searchString;
     }
-    let query =  searchValue ? {name : { $regex: '.*' + searchValue + '.*',$options: 'i' }} : null;
+    let query = searchValue ? { name: { $regex: '.*' + searchValue + '.*', $options: 'i' } } : null;
 
-    const response = { status: 204, message: {} };
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
 
     if (isNaN(offset) || isNaN(count)) {
-        response.status = 400;
-        response.message = { message: "QueryString Offset and Count should be numbers" };
+        response.status = process.env.IS_FALSY;
+        response.message = { message: process.env.OFFSET_COUNT_SHOULD_BE_NUM };
     }
 
     if (count > maxCount) {
-        response.status = 400;
-        response.message = { message: "Max count Cannot exceed " + maxCount }
+        response.status = process.env.IS_FALSY;
+        response.message = { message: process.env.MAX_COUNT_EXCCED_MESSAGE + maxCount }
     }
 
-    if (response.status != 204) {
-        res.status(response.status).json(response.message);
+    if (response.status != process.env.DEFAULT_CODE) {
+        _sendResponse(res, response);
         return;
     }
 
@@ -65,48 +60,21 @@ const getAll = function (req, res) {
         .limit(count)
         .sort({ _id: -1 })
         .exec()
-        .then(foods => {
-            if (!foods) {
-                response.status = 404;
-                response.message = { message: "Food not found" }
-            } else {
-                response.status = 200;
-                response.message = foods;
-            }
-        })
-        .catch(err => {
-            response.status = 500;
-            response.message = { message: "Something went wrong." }
-        })
-        .finally(() => {
-            res.status(response.status).json(response.message);
-        });
+        .then(foods => _fileResponse(process.env.GET_SUCCESS_CODE, foods, response, process.env.NOT_FOUND, true))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.INTERNAL_ERROR_MESSAGE))
+        .finally(() => _sendResponse(res, response));
 }
 
 const getOne = function (req, res) {
     const foodId = req.params.foodId;
 
-    const response = { status: 204, message: {} };
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
     Food
         .findById(foodId)
         .exec()
-        .then(food => {
-            if (!food) {
-                console.log("Food not found");
-                response.status = 404;
-                response.message = { message: "Food not found" }
-            } else {
-                response.status = 200;
-                response.message = food;
-            }
-        })
-        .catch(err => {
-            response.status = 500;
-            response.message = { message: "Something went wrong." };
-        })
-        .finally(() => {
-            res.status(response.status).json(response.message);
-        });
+        .then(food => _fileResponse(process.env.GET_SUCCESS_CODE, food, response, process.env.NOT_FOUND, true))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.INTERNAL_ERROR_MESSAGE))
+        .finally(() => _sendResponse(res, response));
 }
 
 const addOne = function (req, res) {
@@ -118,57 +86,50 @@ const addOne = function (req, res) {
         imageUrl: req.file.path
     };
 
-    const response = { status: 204, message: {} };
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
     Food
         .create(food)
-        .then(addedFood => {
-            response.status = 201;
-            response.message = addedFood;
-        })
-        .catch(err => {
-            response.status = 500;
-            response.message = { message: "Insert failed." }
-        })
-        .finally(() => {
-            res.status(response.status).json(response.message);
-        });
+        .then(addedFood => _fileResponse(process.env.ADD_SUCCESS_CODE, addedFood, response, process.env.FOOD_ADD_FAILED))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.FOOD_ADD_FAILED))
+        .finally(() => _sendResponse(res, response));
 }
 
-const _update = function (req, res, _updateFood) {
+_foodFoundCallback = function (food, response) {
+    if (food) {
+        response.message = food;
+    } else {
+        response.status = process.env.NOT_FOUND_CODE;
+        response.message = { message: process.env.NOT_FOUND };
+    }
+}
+
+_updateOrReturn = function (req, res, response) {
+    if (response.status != process.env.DEFAULT_CODE) {
+        _sendResponse(res, response);
+    }
+    _updateFood(req, res, response.message);
+}
+
+
+_update = function (req, res, _updateFood) {
     const foodId = req.params.foodId;
-    const response = { status: 204, message: {} };
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
     Food
         .findById(foodId)
         .exec()
-        .then(food => {
-            if (food) {
-                response.status = 204;
-                response.message = food;
-            } else {
-                response.status = 404;
-                response.message = { message: "Food not found." };
-            }
-        })
-        .catch(err => {
-            response.status = 500;
-            response.message = { message: "Update failed." };
-        })
-        .finally(() => {
-            if (response.status != 204) {
-                res.status(response.status).json(response.message);
-            }
-            _updateFood(req, res, response.message);
-        });
+        .then(food => _foodFoundCallback(food, response))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.UPDATE_FAILED))
+        .finally(() => _updateOrReturn(req, res, response));
 
     ;
 }
 
+//we are not doing partial update for now
 const partialUpdateFood = function (req, res) {
     _update(req, res, _partialUpdateFood)
 }
 
-//we are not doing partial update for now
-const _partialUpdateFood = function (req, res, food) {
+_partialUpdateFood = function (req, res, food) {
 
     food.name = req.body.name ? req.body.name : food.name;
     food.origin = req.body.origin ? req.body.origin : food.origin;
@@ -182,7 +143,7 @@ const fullUpdateFood = function (req, res) {
     _update(req, res, _fullUpdateFood)
 }
 
-const _fullUpdateFood = function (req, res, food) {
+_fullUpdateFood = function (req, res, food) {
     food.name = req.body.name;
     food.origin = req.body.origin;
     food.description = req.body.description;
@@ -192,37 +153,45 @@ const _fullUpdateFood = function (req, res, food) {
     _saveAndReturn(food, res);
 }
 
-const _saveAndReturn = function (food, res) {
-    const response = { status: 204, message: {} };
+_saveAndReturn = function (food, res) {
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
     food.save()
-        .then(updatedFood => {
-            response.status = 202;
-            response.message = updatedFood;
-        })
-        .catch(err => {
-            response.status = 500;
-            response.message = { message: "Update failed." };
-            console.log(err);
-        })
-        .finally(() => {
-            res.status(response.status).json(response.message);
-        });
+        .then(updatedFood => _fileResponse(process.env.UPDATE_SUCCESS_CODE, updatedFood, response, process.env.UPDATE_FAILED))
+        .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.UPDATE_FAILED))
+        .finally(() => _sendResponse(res, response));
 }
 
 const deleteone = function (req, res) {
     const foodId = req.params.foodId;
 
-    const response = { status: 204, message: {} };
+    const response = { status: process.env.DEFAULT_CODE, message: {} };
     Food.findByIdAndDelete(foodId).exec()
-        .then(deletedFood => {
-            response.status = 204;
-            response.message = deletedFood;
-        }).catch(error => {
-            response.status = 500;
-            response.message = { message: "Delete failed." };
-        }).finally(() => {
-            res.status(response.status).json(response.message);
-        });
+        .then(deletedFood => _fileResponse(process.env.DELETE_SUCCESS_CODE, deletedFood, response, process.env.DELETE_FAILED))
+        .catch(error => _fileResponse(process.env.ERROR_CODE, error, response, process.env.DELETE_FAILED))
+        .finally(() => _sendResponse(res, response));
+}
+
+_fileResponse = function (status, data, response, message, isGet = false) {
+    if (status == process.env.ERROR_CODE) {
+        response.status = process.env.ERROR_CODE;
+        response.message = { message: message };
+    } else {
+        if (data) {
+            response.status = status;
+            response.message = data;
+        } else {
+            if (isGet) {
+                response.status = process.env.NOT_FOUND_CODE;
+            } else {
+                response.status = process.env.IS_NOT_VALID_CODE;
+            }
+            response.message = { message: message };
+        }
+    }
+}
+
+_sendResponse = function (res, response) {
+    res.status(parseInt(response.status, process.env.RADIX)).json(response.message);
 }
 
 module.exports = {

@@ -1,26 +1,32 @@
 const jwt = require("jsonwebtoken");
 const util = require("util");
 
-const authenticate = function(req, res, next){
-    const response = {status:403, message:{message:"No token provided."}};
-
+const authenticate = function (req, res, next) {
+    const response = { status: process.env.NOT_PROVIDED_CODE, message: { message: process.env.NO_TOKEN } };
     const headerExists = req.headers.authorization;
-
-    if(headerExists){
+    console.log(headerExists);
+    if (headerExists) {
         const token = req.headers.authorization.split(" ")[1];
-        const jwtVerifyAsync = util.promisify(jwt.verify, {context: jwt});
+        const jwtVerifyAsync = util.promisify(jwt.verify, { context: jwt });
         jwtVerifyAsync(token, process.env.JWT_UNIQUEKEY)
-            .then(()=>{
+            .then(() => {
                 next();
             })
-            .catch((err)=>{
-                res.status(401).json({message:"Unauthorised"});
-            });
-        
-    }else{
-        return res.status(response.status).json(response.message);
-    }
+            .catch((err) => _catchErrorAndSend(res, response));
 
+    } else {
+        _sendResponse(res, response)
+    }
+}
+
+_catchErrorAndSend = function (res, response) {
+    response.status = process.env.UNAUTHORISED_CODE;
+    response.message = process.env.UNAUTHORISED;
+    _sendResponse(res, response)
+}
+
+_sendResponse = function (res, response) {
+    res.status(parseInt(response.status, process.env.RADIX)).json(response.message);
 }
 
 module.exports = {
