@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 import { AuthService } from '../auth.service';
@@ -23,12 +23,26 @@ export class LoginComponent implements OnInit {
   alert_type!: string;
   alert_message!: string;
 
-  constructor(private authService: AuthService, private usersServie: UsersService, private router: Router) { }
+  constructor(private authService: AuthService, private usersServie: UsersService, private router: Router, private route:ActivatedRoute) { }
+  currentUrl!:string;
+  previousUrl!:string;
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
       this.gotoHome();
     }
+    
+    this.route.queryParams.subscribe(params => {
+      if(params['s'] == "true"){
+        // to make sure url is not edited
+        if(localStorage.getItem('s') == "true"){ 
+          localStorage.removeItem('s');
+          this.hasAlert = true;
+          this.alert_message = environment.REGISTRATION_SUCCESS_REDIRECTION;
+          this.alert_type = environment.SUCCESS_ALERT_TYPE;
+        }
+      }
+    });
   }
 
   login(): void {
@@ -36,23 +50,23 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           if (this.authService.login(response._token)) {
-            this.hasAlert = true;
-            this.alert_type = "success";
-            this.alert_message = "Login success.";
-            this.hideAlertAfterSomeTime();
+            // this.hasAlert = true;
+            // this.alert_type = environment.SUCCESS_ALERT_TYPE;
+            // this.alert_message = environment.LOGIN_SUCCESS;
+            // this.hideAlertAfterSomeTime();
             this.gotoHome();
             return;
           }
         }
         this.hasAlert = true;
-        this.alert_type = "danger";
-        this.alert_message = "Something went wrong please try again.";
+        this.alert_type = environment.ERROR_ALERT_TYPE;
+        this.alert_message = environment.LOGIN_ERROR_WITH_UNKNOWN_REASON;
         this.hideAlertAfterSomeTime();
       },
       error: err => {
         this.hasAlert = true;
-        this.alert_type = "danger";
-        this.alert_message = "Please check your username and password.";
+        this.alert_type = environment.ERROR_ALERT_TYPE;
+        this.alert_message = environment.LOGIN_ERROR_BY_USERNAME_PASSWORD_WRONG;
         this.hideAlertAfterSomeTime();
       }
     })

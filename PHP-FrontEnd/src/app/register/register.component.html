@@ -29,6 +29,8 @@
                         <button class="btn btn-info">Register</button>
                     </div>
                 </form>
+                <br>
+                <app-alert *ngIf="hasAlert" [alert_type]="alert_type" [alert_message]="alert_message"></app-alert>
             </div>
         </div>
     </div>

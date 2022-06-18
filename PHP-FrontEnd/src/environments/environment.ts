@@ -9,7 +9,18 @@ export const environment = {
   ITEMS_COUNT_PER_PAGE: 10,
   ITEMS_OFFSET: 0,
   RADIX: 10,
-  ALERT_HIDE_TIME_IN_SECOND: 3000
+  
+  // Alert Messages
+  ALERT_HIDE_TIME_IN_SECOND: 3000,
+  ERROR_ALERT_TYPE : "danger",
+  SUCCESS_ALERT_TYPE : "success",
+  REPEAT_PASSWORD_NOT_MATCH : "Repeat password did not match.",
+  REGISTRATION_SUCCESS : "Registration success.",
+  REGISTRATION_FAILED : "Registration failed.",
+  REGISTRATION_SUCCESS_REDIRECTION : "Success, Please login with your username and password",
+  LOGIN_SUCCESS : "Login success.",
+  LOGIN_ERROR_WITH_UNKNOWN_REASON : "Something went wrong please try again.",
+  LOGIN_ERROR_BY_USERNAME_PASSWORD_WRONG : "Something went wrong please try again.",
 };
 
 /*
