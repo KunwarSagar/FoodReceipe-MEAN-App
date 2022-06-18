@@ -18,6 +18,10 @@ export class LoginComponent implements OnInit {
   username!: string;
   password!: string;
 
+  hasAlert: boolean = false;
+  alert_type!: string;
+  alert_message!: string;
+
   constructor(private authService: AuthService, private usersServie: UsersService, private router: Router) { }
 
   ngOnInit(): void {
@@ -31,14 +35,21 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           if (this.authService.login(response._token)) {
+            this.hasAlert = true;
+            this.alert_type = "success";
+            this.alert_message = "Login success.";
             this.gotoHome();
             return;
           }
         }
-        console.log("error");
+        this.hasAlert = true;
+        this.alert_type = "danger";
+        this.alert_message = "Something went wrong please try again.";
       },
       error: err => {
-        console.log(err);
+        this.hasAlert = true;
+        this.alert_type = "danger";
+        this.alert_message = "Please check your username and password.";
       }
     })
   }
