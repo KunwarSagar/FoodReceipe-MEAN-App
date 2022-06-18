@@ -50,6 +50,17 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    if(this.isNotAnEmail()){
+      this.showAlert(environment.ERROR_ALERT_TYPE, environment.IS_NOT_AN_EMAIL);
+      this.hideAlertAfterSomeTime();
+      return;
+    }
+
+    if(this.isNotValidPasswordLength()){
+      this.showAlert(environment.ERROR_ALERT_TYPE, environment.IS_NOT_VALID_PASSWORD_LENGTH);
+      this.hideAlertAfterSomeTime();
+      return;
+    }
     const formValue = this.registrationForm.value;
     if (formValue.password != formValue.repeatPassword) {
       this.showAlert(environment.ERROR_ALERT_TYPE, environment.REPEAT_PASSWORD_NOT_MATCH);
@@ -68,6 +79,19 @@ export class RegisterComponent implements OnInit {
         this.showAlert(environment.ERROR_ALERT_TYPE, environment.REGISTRATION_FAILED);
       }
     });
+  }
+  isNotValidPasswordLength() {
+    if(this.registrationForm.value.password.length < environment.PASSWORD_LENGTH){
+      return true;
+    }
+    return false;
+  }
+
+  isNotAnEmail() {
+    if(!this.registrationForm.value.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/)){
+      return true;
+    }
+    return false;
   }
 
   inputFieldsAreEmpty(): boolean {

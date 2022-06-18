@@ -29,7 +29,11 @@ export const environment = {
   DELETE_FAILED : "Delete failed.",
   DELETE_SUCCESS : "Deleted.",
 
-  ALL_FIELDS_REQUIRED : "All fields are required."
+  ALL_FIELDS_REQUIRED : "All fields are required.",
+  IS_NOT_AN_EMAIL : "Please insert valid email.",
+  
+  PASSWORD_LENGTH : 8,
+  IS_NOT_VALID_PASSWORD_LENGTH : "Password must be 8 character long."
 };
 
 /*
