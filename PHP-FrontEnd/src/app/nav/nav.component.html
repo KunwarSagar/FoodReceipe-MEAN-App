@@ -8,15 +8,15 @@
     <div class="navbar-nav">
       <a class="nav-item nav-link text-white border-1 nav_style btn-sm" routerLink="/home">Home</a>
       <a class="nav-item nav-link text-white border-1 nav_style btn-sm cursor-pointer" (click)="goToFoods()">Foods</a>
+      <a class="nav-item nav-link text-white border-1 nav_style btn-sm cursor-pointer" *ngIf="isLoggedIn"
+        (click)="logout()">Logout</a>
     </div>
   </div>
   <div class="navbar-nav me-5 justify-content-end">
-    <a *ngIf="name" class="nav-item nav-link text-white">Hello <b class="h6">{{name}}!</b></a>
+    <a *ngIf="name" class="nav-item nav-link text-white">Hello <b class="h6"> {{name}}!</b></a>
     <a class="nav-item nav-link text-white border-1 nav_style btn-sm cursor-pointer" *ngIf="!isLoggedIn"
       routerLink="/register">Register</a>
     <a class="nav-item nav-link text-white border-1 nav_style btn-sm cursor-pointer" *ngIf="!isLoggedIn"
       routerLink="/login">Login</a>
-    <a class="nav-item nav-link text-white border-1 nav_style btn-sm cursor-pointer" *ngIf="isLoggedIn"
-      (click)="logout()">Logout</a>
   </div>
 </nav>
