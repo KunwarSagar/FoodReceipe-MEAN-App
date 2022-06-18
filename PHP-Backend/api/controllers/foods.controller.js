@@ -1,5 +1,10 @@
 const Food = require("mongoose").model(process.env.FOOD_MODEL);
 
+/**
+ * get size of foods from the data base for pagination
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getSize = function (req, res) {
     const response = { status: process.env.DEFAULT_CODE, message: {} };
     Food.count()
@@ -8,6 +13,12 @@ const getSize = function (req, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * get all the foods from database based on queries
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
 const getAll = function (req, res) {
     let count = parseInt(process.env.COUNT, process.env.RADIX);
     let offset = parseInt(process.env.OFFSET, process.env.RADIX);
@@ -65,6 +76,11 @@ const getAll = function (req, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * get single food from database based on id
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getOne = function (req, res) {
     const foodId = req.params.foodId;
 
@@ -77,6 +93,11 @@ const getOne = function (req, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * Add food to database
+ * @param {*} req 
+ * @param {*} res 
+ */
 const addOne = function (req, res) {
     const food = {
         name: req.body.name,
@@ -94,6 +115,10 @@ const addOne = function (req, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * On update, on food found or not call this callback
+ * to set response
+ */
 _foodFoundCallback = function (food, response) {
     if (food) {
         response.message = food;
@@ -103,6 +128,9 @@ _foodFoundCallback = function (food, response) {
     }
 }
 
+/**
+ * return if error or update food
+ */
 _updateOrReturn = function (req, res, response, _updateFood) {
     if (response.status != process.env.DEFAULT_CODE) {
         _sendResponse(res, response);
@@ -110,7 +138,9 @@ _updateOrReturn = function (req, res, response, _updateFood) {
     _updateFood(req, res, response.message);
 }
 
-
+/**
+ * Find food that needs to be updated
+ */
 _update = function (req, res, _updateFood) {
     const foodId = req.params.foodId;
     const response = { status: process.env.DEFAULT_CODE, message: {} };
@@ -139,10 +169,18 @@ _partialUpdateFood = function (req, res, food) {
     _saveAndReturn(food, res);
 }
 
+/**
+ * Full update of the food 
+ * @param {*} req 
+ * @param {*} res 
+ */
 const fullUpdateFood = function (req, res) {
     _update(req, res, _fullUpdateFood)
 }
 
+/**
+ * full update
+ */
 _fullUpdateFood = function (req, res, food) {
     food.name = req.body.name;
     food.origin = req.body.origin;
@@ -153,6 +191,9 @@ _fullUpdateFood = function (req, res, food) {
     _saveAndReturn(food, res);
 }
 
+/**
+ * update food final callback
+ */
 _saveAndReturn = function (food, res) {
     const response = { status: process.env.DEFAULT_CODE, message: {} };
     food.save()
@@ -161,6 +202,11 @@ _saveAndReturn = function (food, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * delete food based on id
+ * @param {*} req 
+ * @param {*} res 
+ */
 const deleteone = function (req, res) {
     const foodId = req.params.foodId;
 
@@ -171,6 +217,9 @@ const deleteone = function (req, res) {
         .finally(() => _sendResponse(res, response));
 }
 
+/**
+ * set response for all teh callback in the file
+ */
 _fileResponse = function (status, data, response, message, isGet = false) {
     if (status == process.env.ERROR_CODE) {
         response.status = process.env.ERROR_CODE;
@@ -190,6 +239,9 @@ _fileResponse = function (status, data, response, message, isGet = false) {
     }
 }
 
+/**
+ * response of all the methods
+ */
 _sendResponse = function (res, response) {
     res.status(parseInt(response.status, process.env.RADIX)).json(response.message);
 }

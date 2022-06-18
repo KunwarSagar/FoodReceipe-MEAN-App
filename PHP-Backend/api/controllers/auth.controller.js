@@ -1,6 +1,12 @@
 const jwt = require("jsonwebtoken");
 const util = require("util");
 
+/**
+ * Authenticated PUT,POST,DELETE Methods
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 const authenticate = function (req, res, next) {
     const response = { status: process.env.NOT_PROVIDED_CODE, message: { message: process.env.NO_TOKEN } };
     const headerExists = req.headers.authorization;
@@ -19,12 +25,18 @@ const authenticate = function (req, res, next) {
     }
 }
 
+/**
+ * On JWTVERIFY Error call this
+ */
 _catchErrorAndSend = function (res, response) {
     response.status = process.env.UNAUTHORISED_CODE;
     response.message = process.env.UNAUTHORISED;
     _sendResponse(res, response)
 }
 
+/**
+ * send response
+ */
 _sendResponse = function (res, response) {
     res.status(parseInt(response.status, process.env.RADIX)).json(response.message);
 }

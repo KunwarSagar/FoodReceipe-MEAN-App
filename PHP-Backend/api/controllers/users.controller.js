@@ -5,6 +5,11 @@ const util = require("util");
 
 const _noOfRounds = parseInt(process.env.BCRYPT_NO_OF_ROUNDS, process.env.RADIX);
 
+/**
+ * Register user
+ * @param {*} req 
+ * @param {*} res 
+ */
 const register = function (req, res) {
     if (req.body && req.body.name && req.body.email && req.body.password && req.body.username) {
 
@@ -26,6 +31,11 @@ const register = function (req, res) {
     }
 }
 
+/**
+ * Login User
+ * @param {*} req 
+ * @param {*} res 
+ */
 const login = function (req, res) {
 
     if (req.body && req.body.username && req.body.password) {
@@ -42,15 +52,24 @@ const login = function (req, res) {
     }
 }
 
+/**
+ * hash password with bcrypt
+ */
 _hashPassword = function (saltValue, password) {
     return bcrypt.hash(password, saltValue);
 }
 
+/**
+ * create user 
+ */
 __createUser = function (hashedPassword, userDataWithOutPassword, response) {
     const userDataWithHashedPassword = { ...userDataWithOutPassword, password: hashedPassword };
     return User.create(userDataWithHashedPassword);
 }
 
+/**
+ * check if account exists
+ */
 _checkAccount = function (user) {
     return new Promise((resolve, reject) => {
         if (!user) {
@@ -61,6 +80,9 @@ _checkAccount = function (user) {
     });
 }
 
+/**
+ * check if passwords match
+ */
 _checkPassword = async function (user, password) {
     return bcrypt.compare(password, user.password)
         .then(matched => {
@@ -75,6 +97,9 @@ _checkPassword = async function (user, password) {
         });
 }
 
+/**
+ * create jwt token
+ */
 _createToken = function (result) {
     if (result.matched) {
         const jwtSignAsync = util.promisify(jwt.sign, { context: jwt });
@@ -84,6 +109,9 @@ _createToken = function (result) {
     }
 }
 
+/**
+ * set response for all callbacks
+ */
 _fileResponse = function (status, data, response, message) {
     if (status == process.env.ERROR_CODE) {
         response.status = process.env.ERROR_CODE;
@@ -99,6 +127,9 @@ _fileResponse = function (status, data, response, message) {
     }
 }
 
+/**
+ * send response of all the methods
+ */
 _sendResponse = function (res, response) {
     res.status(parseInt(response.status, process.env.RADIX)).json(response.message);
 }
