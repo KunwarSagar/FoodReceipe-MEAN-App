@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 import { AuthService } from '../auth.service';
 import { UsersService } from '../users.service';
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit {
             this.hasAlert = true;
             this.alert_type = "success";
             this.alert_message = "Login success.";
+            this.hideAlertAfterSomeTime();
             this.gotoHome();
             return;
           }
@@ -45,11 +47,13 @@ export class LoginComponent implements OnInit {
         this.hasAlert = true;
         this.alert_type = "danger";
         this.alert_message = "Something went wrong please try again.";
+        this.hideAlertAfterSomeTime();
       },
       error: err => {
         this.hasAlert = true;
         this.alert_type = "danger";
         this.alert_message = "Please check your username and password.";
+        this.hideAlertAfterSomeTime();
       }
     })
   }
@@ -59,4 +63,9 @@ export class LoginComponent implements OnInit {
       .then(() => this.router.navigate(['/home']));
   }
 
+  hideAlertAfterSomeTime(): void {
+    setTimeout(() => {
+      this.hasAlert = false;
+    }, environment.ALERT_HIDE_TIME_IN_SECOND);
+  }
 }
