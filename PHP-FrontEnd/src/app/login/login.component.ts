@@ -53,25 +53,16 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           if (this.authService.login(response._token)) {
-            // this.hasAlert = true;
-            // this.alert_type = environment.SUCCESS_ALERT_TYPE;
-            // this.alert_message = environment.LOGIN_SUCCESS;
-            // this.hideAlertAfterSomeTime();
+            this.showAlert(environment.SUCCESS_ALERT_TYPE, environment.LOGIN_SUCCESS);
             localStorage.setItem('l', "true");
             this.gotoFoods();
             return;
           }
         }
-        this.hasAlert = true;
-        this.alert_type = environment.ERROR_ALERT_TYPE;
-        this.alert_message = environment.LOGIN_ERROR_WITH_UNKNOWN_REASON;
-        this.hideAlertAfterSomeTime();
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.LOGIN_ERROR_WITH_UNKNOWN_REASON);
       },
       error: err => {
-        this.hasAlert = true;
-        this.alert_type = environment.ERROR_ALERT_TYPE;
-        this.alert_message = environment.LOGIN_ERROR_BY_USERNAME_PASSWORD_WRONG;
-        this.hideAlertAfterSomeTime();
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.LOGIN_ERROR_BY_USERNAME_PASSWORD_WRONG);
       }
     })
   }
@@ -84,6 +75,18 @@ export class LoginComponent implements OnInit {
       .then(() => {
         this.router.navigate(['/foods'], { queryParams: { l: true } })
       });
+  }
+
+  /**
+* show alerts
+* @param alert_type 
+* @param message 
+*/
+  showAlert(alert_type: string, message: string): void {
+    this.hasAlert = true;
+    this.alert_type = alert_type;
+    this.alert_message = message;
+    this.hideAlertAfterSomeTime();
   }
 
   /**

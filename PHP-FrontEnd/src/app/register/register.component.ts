@@ -41,30 +41,23 @@ export class RegisterComponent implements OnInit {
    * @returns void
    */
   register(): void {
+
     const formValue = this.registrationForm.value;
     if (formValue.password != formValue.repeatPassword) {
-      this.hasAlert = true;
-      this.alert_type = environment.ERROR_ALERT_TYPE;
-      this.alert_message = environment.REPEAT_PASSWORD_NOT_MATCH;
-      this.hideAlertAfterSomeTime();
+      this.showAlert(environment.ERROR_ALERT_TYPE, environment.REPEAT_PASSWORD_NOT_MATCH);
       return;
     }
     this.usersService.addUser(this.registrationForm.value).subscribe({
       next: (user) => {
         if (user) {
-          // this.hasAlert = true;
-          // this.alert_type = environment.SUCCESS_ALERT_TYPE;
-          // this.alert_message = environment.REGISTRATION_SUCCESS;
-          // this.hideAlertAfterSomeTime();
+          this.showAlert(environment.SUCCESS_ALERT_TYPE, environment.REGISTRATION_SUCCESS);
           this.goToLogin();
           return;
         }
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.REGISTRATION_FAILED);
       },
       error: (err) => {
-        this.hasAlert = true;
-        this.alert_type = environment.ERROR_ALERT_TYPE;
-        this.alert_message = environment.REGISTRATION_FAILED;
-        this.hideAlertAfterSomeTime();
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.REGISTRATION_FAILED);
       }
     });
   }
@@ -75,9 +68,21 @@ export class RegisterComponent implements OnInit {
   goToLogin(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => {
-        localStorage.setItem("s","true");
-        this.router.navigate(['/login'], {queryParams:{s:true}})
+        localStorage.setItem("s", "true");
+        this.router.navigate(['/login'], { queryParams: { s: true } })
       });
+  }
+
+  /**
+* show alerts
+* @param alert_type 
+* @param message 
+*/
+  showAlert(alert_type: string, message: string): void {
+    this.hasAlert = true;
+    this.alert_type = alert_type;
+    this.alert_message = message;
+    this.hideAlertAfterSomeTime();
   }
 
   /**
