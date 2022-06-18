@@ -19,6 +19,7 @@ import { RegisterComponent } from './register/register.component';
 import { environment } from 'src/environments/environment';
 import { TokenService } from './token.service';
 import { NotFoundErorComponent } from './not-found-eror/not-found-eror.component';
+import { AlertComponent } from './alert/alert.component';
 
 export function jwtOptionsFactory(tokenService: TokenService) {
   return {
@@ -42,7 +43,8 @@ export function jwtOptionsFactory(tokenService: TokenService) {
     GoBackComponent,
     LoginComponent,
     RegisterComponent,
-    NotFoundErorComponent
+    NotFoundErorComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
