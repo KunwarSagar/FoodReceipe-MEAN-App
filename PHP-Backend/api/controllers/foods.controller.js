@@ -103,7 +103,7 @@ _foodFoundCallback = function (food, response) {
     }
 }
 
-_updateOrReturn = function (req, res, response) {
+_updateOrReturn = function (req, res, response, _updateFood) {
     if (response.status != process.env.DEFAULT_CODE) {
         _sendResponse(res, response);
     }
@@ -119,7 +119,7 @@ _update = function (req, res, _updateFood) {
         .exec()
         .then(food => _foodFoundCallback(food, response))
         .catch(err => _fileResponse(process.env.ERROR_CODE, err, response, process.env.UPDATE_FAILED))
-        .finally(() => _updateOrReturn(req, res, response));
+        .finally(() => _updateOrReturn(req, res, response, _updateFood));
 
     ;
 }

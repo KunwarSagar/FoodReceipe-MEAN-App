@@ -4,7 +4,7 @@ const util = require("util");
 const authenticate = function (req, res, next) {
     const response = { status: process.env.NOT_PROVIDED_CODE, message: { message: process.env.NO_TOKEN } };
     const headerExists = req.headers.authorization;
-    console.log(headerExists);
+
     if (headerExists) {
         const token = req.headers.authorization.split(" ")[1];
         const jwtVerifyAsync = util.promisify(jwt.verify, { context: jwt });

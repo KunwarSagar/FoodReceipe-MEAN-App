@@ -78,7 +78,7 @@ _checkPassword = async function (user, password) {
 _createToken = function (result) {
     if (result.matched) {
         const jwtSignAsync = util.promisify(jwt.sign, { context: jwt });
-        return jwtSignAsync({ name: result.name }, process.env.JWT_UNIQUEKEY, { expiresIn: process.env.JWT_EXPIRE_TIME });
+        return jwtSignAsync({ name: result.name }, process.env.JWT_UNIQUEKEY, { expiresIn: parseInt(process.env.JWT_EXPIRE_TIME, process.env.RADIX) });
     } else {
         return new Promise((resolve, reject) => reject());
     }
