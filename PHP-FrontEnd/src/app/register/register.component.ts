@@ -36,6 +36,10 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  /**
+   * register
+   * @returns void
+   */
   register(): void {
     const formValue = this.registrationForm.value;
     if (formValue.password != formValue.repeatPassword) {
@@ -65,6 +69,9 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  /**
+   * redirect to login
+   */
   goToLogin(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => {
@@ -73,6 +80,9 @@ export class RegisterComponent implements OnInit {
       });
   }
 
+  /**
+   * hide alert after certain time
+   */
   hideAlertAfterSomeTime(): void {
     setTimeout(() => {
       this.hasAlert = false;
