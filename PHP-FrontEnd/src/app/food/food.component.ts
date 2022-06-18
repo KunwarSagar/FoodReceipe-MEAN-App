@@ -15,19 +15,34 @@ export class FoodComponent implements OnInit {
 
   // fontawesome
   faTrash = faTrash;
-  isLoggedIn!:boolean;
+  isLoggedIn!: boolean;
 
   food!: Food;
 
   imageUrl!: string;
+  
+  hasAlert: boolean = false;
+  alert_type!: string;
+  alert_message!: string;
 
-  constructor(private route: ActivatedRoute, private foodService: FoodService, private router: Router, private authService:AuthService) {
+  constructor(private route: ActivatedRoute, private foodService: FoodService, private router: Router, private authService: AuthService) {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.food = new Food("", "", "", "", []);
   }
 
   ngOnInit(): void {
     const foodId = this.route.snapshot.params["foodId"];
+    this.route.queryParams.subscribe(params => {
+
+      //update success alert
+      if (params['u'] == "true") {
+        if (localStorage.getItem('u') == "true") {
+          localStorage.removeItem('u');
+          this.showAlert(environment.SUCCESS_ALERT_TYPE, environment.UPDATE_SUCCESS);
+        }
+      }
+    });
+
     this.foodService.getFood(foodId).subscribe({
       next: food => {
         if (food) {
@@ -51,13 +66,34 @@ export class FoodComponent implements OnInit {
     this.foodService.deleteFood(this.food._id).subscribe({
       next: food => {
         if (food == null) {
-          alert("Deleted");
-          this.router.navigate(['/foods']);
+          localStorage.setItem('d', 'true');
+          this.router.navigate(['/foods'], {queryParams:{d:true}});
         }
       },
       error: err => {
-        alert("Something went wrong");
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.DELETE_FAILED);
       }
     });
   }
+
+    /**
+   * show alerts
+   * @param alert_type 
+   * @param message 
+   */
+     showAlert(alert_type:string, message:string): void {
+      this.hasAlert = true;
+      this.alert_type = alert_type;
+      this.alert_message = message;
+      this.hideAlertAfterSomeTime();
+    }
+
+    /**
+   * hide alert after certain time
+   */
+     hideAlertAfterSomeTime(): void {
+      setTimeout(() => {
+        this.hasAlert = false;
+      }, environment.ALERT_HIDE_TIME_IN_SECOND);
+    }
 }

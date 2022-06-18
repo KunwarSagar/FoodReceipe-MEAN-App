@@ -21,6 +21,13 @@ export const environment = {
   LOGIN_SUCCESS : "Login success.",
   LOGIN_ERROR_WITH_UNKNOWN_REASON : "Something went wrong please try again.",
   LOGIN_ERROR_BY_USERNAME_PASSWORD_WRONG : "Something went wrong please try again.",
+
+  UPDATE_FAIL : "Food update failed.",
+  ADD_FAIL : "Food add failed.",
+  UPDATE_SUCCESS : "Updated.",
+  ADD_SUCCESS : "Food added.",
+  DELETE_FAILED : "Delete failed.",
+  DELETE_SUCCESS : "Deleted."
 };
 
 /*

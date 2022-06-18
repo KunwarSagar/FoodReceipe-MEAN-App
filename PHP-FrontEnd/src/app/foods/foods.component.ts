@@ -63,7 +63,6 @@ export class FoodsComponent implements OnInit {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 
-
   ngOnInit(): void {
     /**
      * we added inside subscribe just to recreate component everytime pagination items are clicked so that it 
@@ -75,10 +74,21 @@ export class FoodsComponent implements OnInit {
       if (params['l'] == "true") {
         if (localStorage.getItem('l') == "true") {
           localStorage.removeItem('l');
-          this.hasAlert = true;
-          this.alert_type = environment.SUCCESS_ALERT_TYPE;
-          this.alert_message = environment.LOGIN_SUCCESS;
-          this.hideAlertAfterSomeTime();
+          this.showAlert(environment.SUCCESS_ALERT_TYPE, environment.LOGIN_SUCCESS);
+        }
+      }
+      //food add success alert
+      if (params['a'] == "true") {
+        if (localStorage.getItem('a') == "true") {
+          localStorage.removeItem('a');
+          this.showAlert(environment.SUCCESS_ALERT_TYPE, environment.ADD_SUCCESS);
+        }
+      }
+      // delete success
+      if (params['d'] == "true") {
+        if (localStorage.getItem('d') == "true") {
+          localStorage.removeItem('d');
+          this.showAlert(environment.ERROR_ALERT_TYPE, environment.DELETE_SUCCESS);
         }
       }
 
@@ -146,11 +156,13 @@ export class FoodsComponent implements OnInit {
     this.foodService.deleteFood(foodId).subscribe({
       next: food => {
         if (food == null) {
+          this.queryParams.d = 'true';
+          localStorage.setItem('d','true');
           this.redirectTo('/foods');
         }
       },
       error: err => {
-        alert("Something went wrong");
+        this.showAlert(environment.ERROR_ALERT_TYPE, environment.DELETE_FAILED);
       }
     })
   }
@@ -196,6 +208,18 @@ export class FoodsComponent implements OnInit {
       this.router.navigate([uri], { queryParams: this.queryParams }));
   }
 
+    /**
+   * show alerts
+   * @param alert_type 
+   * @param message 
+   */
+     showAlert(alert_type:string, message:string): void {
+      this.hasAlert = true;
+      this.alert_type = alert_type;
+      this.alert_message = message;
+      this.hideAlertAfterSomeTime();
+    }
+  
   /**
    * hide alert after certain time
    */

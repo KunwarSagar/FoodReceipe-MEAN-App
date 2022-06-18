@@ -32,9 +32,10 @@
                                             for="thumbnail">
                                             {{foodImage == "" ? "Choose ":"Update "}}Thumbnail
                                         </label>
-                                        <input hidden type="file" name="thumbnail" id="thumbnail"
-                                            ngModel (change)="selectImage($event)">
-                                        <img class="ms-3" src="{{foodImage}}" height="70" width="auto" *ngIf="!thumbnailImageBase64">
+                                        <input hidden type="file" name="thumbnail" id="thumbnail" ngModel
+                                            (change)="selectImage($event)">
+                                        <img class="ms-3" src="{{foodImage}}" height="70" width="auto"
+                                            *ngIf="!thumbnailImageBase64">
                                         <img class="ms-3" src="{{thumbnailImageBase64}}" height="70" width="auto"
                                             *ngIf="thumbnailImageBase64">
                                     </div>
@@ -76,13 +77,17 @@
                                 </p>
                             </div>
                             <div class="m-3 text-center">
-                                <button class="btn btn-info" type="submit">&#43; {{isUpdate?'Update':'Add'}} Food</button>
+                                <button class="btn btn-info" type="submit">&#43; {{isUpdate?'Update':'Add'}}
+                                    Food</button>
                             </div>
-                            <div class="invalid-feedback text-center"
+                            <!-- <div class="invalid-feedback text-center"
                                 [ngStyle]="{display:foodAddFailed?'block':'none'}">
                                 Game {{isUpdate?'update':'add'}} Failed.
-                            </div>
+                            </div> -->
                         </form>
+                        <br>
+                        <app-alert *ngIf="hasAlert" [alert_type]="alert_type" [alert_message]="alert_message">
+                        </app-alert>
                     </div>
                 </div>
             </div>

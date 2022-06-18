@@ -31,11 +31,13 @@ export class AddEditComponent implements OnInit {
     thumbnail: false
   }
 
-  foodAddFailed: boolean = false;
-
   isNotImage: boolean = false;
   isOverSizedImage: boolean = false;
   acceptableExtensions: string[] = ["image/png", "image/jpg", "image/jpeg"];
+
+  hasAlert: boolean = false;
+  alert_type!: string;
+  alert_message!: string;
 
   constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService:AuthService) {
     this.food = new Food("", "", "", "", [{ name: "", quantity: "" }]);
@@ -53,15 +55,25 @@ export class AddEditComponent implements OnInit {
     }
   }
 
+  /**
+   * redirect to login
+   */
   goToLogin() {
     this.router.navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate(['/login']));
   }
 
+  /**
+   * set update
+   */
   setUpdate(): void {
     this.isUpdate = true;
   }
   
+  /**
+   * get food by id
+   * @param foodId 
+   */
   getFood(foodId: string): void {
     this.foodService.getFood(foodId).subscribe({
       next: food => {
@@ -70,11 +82,15 @@ export class AddEditComponent implements OnInit {
         this.setUpdate();
       },
       error: err => {
-        console.log("Couldn't get food.");
+        this.router.navigate(['/not-found']);
       }
     })
   }
 
+  /**
+   * On submit add/edit form
+   * @returns 
+   */
   addEditFood(): void {
     if (this.foodInputFieldsNotFilled() || this.ingredientsInputNotFilled() || this.thumbnailNotAdded()) {
       return;
@@ -96,19 +112,29 @@ export class AddEditComponent implements OnInit {
       next: food => {
         if (food) {
           if (this.isUpdate) {
-            this.router.navigate(["foods/" + this.food._id]);
+            localStorage.setItem('u', 'true');
+            this.router.navigate(["foods/" + this.food._id], {queryParams:{u:true}});
           } else {
-            this.router.navigate(["foods/"]);
+            localStorage.setItem('a', 'true');
+            this.router.navigate(["foods/"],{queryParams:{a:true}});
           }
         }
       },
       error: err => {
-        this.foodAddFailed = true;
-        this.makeErrorTrueForThreeSecond();
+        this.hasAlert = true;
+        this.alert_type = environment.ERROR_ALERT_TYPE;
+        this.alert_message = this.isUpdate ? environment.UPDATE_FAIL : environment.ADD_FAIL;
+        this.hideAlertAfterSomeTime();
       }
     });
   }
 
+  /**
+   * check image size and extension
+   * @param imageExtension 
+   * @param imageSize 
+   * @returns 
+   */
   sizeAndExtensionValid(imageExtension: string, imageSize: number): boolean {
     if (!this.acceptableExtensions.includes(imageExtension)) {
       this.isNotImage = true;
@@ -117,12 +143,17 @@ export class AddEditComponent implements OnInit {
       this.isOverSizedImage = true;
     }
     if (this.isNotImage || this.isOverSizedImage) {
-      this.makeErrorTrueForThreeSecond();
+      this.hideAlertAfterSomeTime();
       return false;
     }
     return true;
   }
 
+  /**
+   * select thumbnail image
+   * @param event 
+   * @returns 
+   */
   selectImage(event: any): void {
     const target: any = event.target;
     if (target.files && target.files[0]) {
@@ -144,18 +175,26 @@ export class AddEditComponent implements OnInit {
     }
   }
 
+  /**
+   * check thumbnail selected or not
+   * @returns boolean
+   */
   thumbnailNotAdded(): boolean {
     if(this.isUpdate){
       return false;
     }
     if (this.thumbnailImage == "") {
       this.required.thumbnail = true;
-      this.makeErrorTrueForThreeSecond();
+      this.hideAlertAfterSomeTime();
       return true;
     }
     return false;
   }
 
+  /**
+   * food input field not filleds
+   * @returns boolean
+   */
   foodInputFieldsNotFilled(): boolean {
     let isNotFilled: boolean = false;
     if (this.food.name == "") {
@@ -166,22 +205,30 @@ export class AddEditComponent implements OnInit {
 
     if (this.required.name || this.required.origin) {
       isNotFilled = true;
-      this.makeErrorTrueForThreeSecond();
+      this.hideAlertAfterSomeTime();
     }
     return isNotFilled;
   }
 
+  /**
+   * ingredients input field empty chech
+   * @returns boolean
+   */
   ingredientsInputNotFilled(): boolean {
     for (let i = 0; i < this.food.ingredients.length; i++) {
       if (this.food.ingredients[i].name == "" || this.food.ingredients[i].quantity == "") {
         this.required.ingredients = true;
-        this.makeErrorTrueForThreeSecond();
+        this.hideAlertAfterSomeTime();
         return true;
       }
     }
     return false;
   }
 
+  /**
+   * add ingredient input field on click
+   * @returns 
+   */
   addIngredientInputField(): void {
     if (this.ingredientsInputNotFilled()) {
       return;
@@ -198,7 +245,10 @@ export class AddEditComponent implements OnInit {
     }
   }
 
-  makeErrorTrueForThreeSecond(): void {
+  /**
+   * hide alert after certain time
+   */
+   hideAlertAfterSomeTime(): void {
     setTimeout(() => {
       this.required.name = false;
       this.required.origin = false;
@@ -206,9 +256,8 @@ export class AddEditComponent implements OnInit {
       this.isNotImage = false;
       this.isOverSizedImage = false;
       this.required.thumbnail = false;
-      this.foodAddFailed = false;
-    }, 3000);
+
+      this.hasAlert = false;
+    }, environment.ALERT_HIDE_TIME_IN_SECOND);
   }
-
-
 }

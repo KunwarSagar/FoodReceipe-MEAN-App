@@ -3,6 +3,7 @@
         <div class="col">
             <app-go-back></app-go-back>
             <div class="mt-3 food_area">
+                <app-alert *ngIf="hasAlert" [alert_type]="alert_type" [alert_message]="alert_message"></app-alert>
                 <div class="card bg-transparent">
                     <div class="card-header bg-transparent">
                         <h5 class="text-white h3"><b>Food Name: {{food.name}}</b></h5>
@@ -22,7 +23,9 @@
                     </div>
                     <div class="card-footer bg-transparent" *ngIf="isLoggedIn">
                         <a class="btn btn-info btn-xs me-1" routerLink="/foods/{{food._id}}/edit">&#9998; Edit Item</a>
-                        <a class="btn btn-danger btn-xs ms-1" (click)="delete()"> <fa-icon [icon]="faTrash"></fa-icon> Delete</a>
+                        <a class="btn btn-danger btn-xs ms-1" (click)="delete()">
+                            <fa-icon [icon]="faTrash"></fa-icon> Delete
+                        </a>
                     </div>
                 </div>
             </div>
