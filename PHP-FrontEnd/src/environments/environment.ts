@@ -14,6 +14,7 @@ export const environment = {
   ALERT_HIDE_TIME_IN_SECOND: 3000,
   ERROR_ALERT_TYPE : "danger",
   SUCCESS_ALERT_TYPE : "success",
+  INFO_ALERT_TYPE : "info",
   REPEAT_PASSWORD_NOT_MATCH : "Repeat password did not match.",
   REGISTRATION_SUCCESS : "Registration success.",
   REGISTRATION_FAILED : "Registration failed.",
@@ -33,7 +34,9 @@ export const environment = {
   IS_NOT_AN_EMAIL : "Please insert valid email.",
   
   PASSWORD_LENGTH : 8,
-  IS_NOT_VALID_PASSWORD_LENGTH : "Password must be 8 character long."
+  IS_NOT_VALID_PASSWORD_LENGTH : "Password must be 8 character long.",
+
+  CHANGE_NOT_SAVE_MESSAGE : "Data changed will not be persisted until update."
 };
 
 /*

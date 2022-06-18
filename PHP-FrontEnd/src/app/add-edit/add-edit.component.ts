@@ -19,7 +19,7 @@ export class AddEditComponent implements OnInit {
 
   food!: Food;
   isUpdate: boolean = false;
-  foodImage:string = "";
+  foodImage: string = "";
 
   thumbnailImageBase64!: any;
   thumbnailImage: any = "";
@@ -39,14 +39,16 @@ export class AddEditComponent implements OnInit {
   alert_type!: string;
   alert_message!: string;
 
-  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService:AuthService) {
+  isDataChanged: boolean = false;
+
+  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService: AuthService) {
     this.food = new Food("", "", "", "", [{ name: "", quantity: "" }]);
   }
 
   ngOnInit(): void {
-    if(!this.authService.isLoggedIn()){
+    if (!this.authService.isLoggedIn()) {
       this.goToLogin()
-    }else{
+    } else {
       const foodId = this.route.snapshot.params['foodId'];
       if (foodId && Object.prototype.toString.call(foodId) === "[object String]") {
         this.required.thumbnail = false;
@@ -69,7 +71,7 @@ export class AddEditComponent implements OnInit {
   setUpdate(): void {
     this.isUpdate = true;
   }
-  
+
   /**
    * get food by id
    * @param foodId 
@@ -78,7 +80,7 @@ export class AddEditComponent implements OnInit {
     this.foodService.getFood(foodId).subscribe({
       next: food => {
         this.food = food;
-        this.foodImage = environment.API_BASE_URL+"/"+food.imageUrl;
+        this.foodImage = environment.API_BASE_URL + "/" + food.imageUrl;
         this.setUpdate();
       },
       error: err => {
@@ -97,9 +99,9 @@ export class AddEditComponent implements OnInit {
     }
 
     let formData: FormData = new FormData();
-    if(this.thumbnailImage == "" && this.isUpdate){
+    if (this.thumbnailImage == "" && this.isUpdate) {
       formData.append('imageUrl', this.food.imageUrl);
-    }else{
+    } else {
       formData.append('thumbnailImage', this.thumbnailImage);
     }
     formData.append('name', this.food.name);
@@ -113,18 +115,15 @@ export class AddEditComponent implements OnInit {
         if (food) {
           if (this.isUpdate) {
             localStorage.setItem('u', 'true');
-            this.router.navigate(["foods/" + this.food._id], {queryParams:{u:true}});
+            this.router.navigate(["foods/" + this.food._id], { queryParams: { u: true } });
           } else {
             localStorage.setItem('a', 'true');
-            this.router.navigate(["foods/"],{queryParams:{a:true}});
+            this.router.navigate(["foods/"], { queryParams: { a: true } });
           }
         }
       },
       error: err => {
-        this.hasAlert = true;
-        this.alert_type = environment.ERROR_ALERT_TYPE;
-        this.alert_message = this.isUpdate ? environment.UPDATE_FAIL : environment.ADD_FAIL;
-        this.hideAlertAfterSomeTime();
+        this.showAlert(environment.ERROR_ALERT_TYPE, this.isUpdate ? environment.UPDATE_FAIL : environment.ADD_FAIL)
       }
     });
   }
@@ -180,7 +179,7 @@ export class AddEditComponent implements OnInit {
    * @returns boolean
    */
   thumbnailNotAdded(): boolean {
-    if(this.isUpdate){
+    if (this.isUpdate) {
       return false;
     }
     if (this.thumbnailImage == "") {
@@ -237,18 +236,27 @@ export class AddEditComponent implements OnInit {
   }
 
   deleteInputField(index: number): void {
-    for (let i = 0; i < this.food.ingredients.length; i++) {
-      if (index > -1) {
-        this.food.ingredients.splice(index, 1);
-
-      }
+    this.food.ingredients.splice(index, 1);
+    if(this.isUpdate){
+      this.showAlert(environment.INFO_ALERT_TYPE, environment.CHANGE_NOT_SAVE_MESSAGE)
     }
+  }
+  /**
+ * show alerts
+ * @param alert_type 
+ * @param message 
+ */
+  showAlert(alert_type: string, message: string): void {
+    this.hasAlert = true;
+    this.alert_type = alert_type;
+    this.alert_message = message;
+    this.hideAlertAfterSomeTime();
   }
 
   /**
    * hide alert after certain time
    */
-   hideAlertAfterSomeTime(): void {
+  hideAlertAfterSomeTime(): void {
     setTimeout(() => {
       this.required.name = false;
       this.required.origin = false;
