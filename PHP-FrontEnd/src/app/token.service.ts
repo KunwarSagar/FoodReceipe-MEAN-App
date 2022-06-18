@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,11 @@ export class TokenService {
   constructor() { }
 
   set token(_token: any) {
-    sessionStorage.setItem("_token", _token);
+    sessionStorage.setItem(environment.TOKEN_KEY, _token);
   }
 
   get token() {
-    return sessionStorage.getItem("_token");
+    return sessionStorage.getItem(environment.TOKEN_KEY);
   }
 
   deleteToken() {
@@ -26,7 +27,7 @@ export class TokenService {
     this.#jwtService = jwtService;
   }
 
-  #name: string = "unknown";
+  #name!:string;
   get name() {
     if (this.token) {
       this.#name = this.#jwtService.decodeToken(this.token).name;

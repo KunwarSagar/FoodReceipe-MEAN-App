@@ -10,6 +10,15 @@ export const environment = {
   ITEMS_OFFSET: 0,
   RADIX: 10,
   
+  TOKEN_KEY : "_token",
+
+  ACCEPTED_FILES : ["image/png", "image/jpg", "image/jpeg"],
+  FILETYPE_NOT_MATCH : "File type not supported. Suppported files are jpeg, jpg and png.",
+  THUMBNAIL_IMAGE_KEY : 'thumbnailImage',
+  THUMBNAIL_REQUIRED : "Thumbnail is required",
+  FILE_SIZE : 5000000, // 5 mb 
+  FILESIZE_EXCEEDS : "File size should not exceed 5Mb.",
+
   // Alert Messages
   ALERT_HIDE_TIME_IN_SECOND: 3000,
   ERROR_ALERT_TYPE : "danger",
@@ -36,7 +45,12 @@ export const environment = {
   PASSWORD_LENGTH : 8,
   IS_NOT_VALID_PASSWORD_LENGTH : "Password must be 8 character long.",
 
-  CHANGE_NOT_SAVE_MESSAGE : "Data changed will not be persisted until update."
+  CHANGE_NOT_SAVE_MESSAGE : "Data changed will not be persisted until update.",
+  LOGOUT_FAILED : "Logout failed.",
+
+  NAME_REQUIRES : "Name is required",
+  ORIGIN_REQUIRED : "Origin is required",
+  INGREDIENTS_REQUIRED : "Please fill all the fields.",
 };
 
 /*

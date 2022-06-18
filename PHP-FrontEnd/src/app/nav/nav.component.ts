@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth.service';
 import { TokenService } from '../token.service';
 
@@ -49,7 +50,7 @@ export class NavComponent implements OnInit {
       this.gotoLogin();
       return;
     } else {
-      console.log("logout error");
+      alert(environment.LOGOUT_FAILED)
     }
   }
   gotoLogin(): void {

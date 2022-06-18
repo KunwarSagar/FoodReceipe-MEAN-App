@@ -7,14 +7,13 @@
                     <div class="card-header"> Add Food</div>
                     <div class="card-body">
                         <form class="form-group" #addEditFoodForm="ngForm" (ngSubmit)="addEditFood()">
-                            <!-- //we can also Password data to register() function -->
                             <div class="row">
                                 <div class="col col-md-6">
                                     <label class="label-control" for="">Name:</label>
                                     <input class="form-control" placeholder="Name" name="name" [(ngModel)]="food.name"
                                         required #name="ngModel" />
                                     <div class="invalid-feedback" [ngStyle]="{display:required.name?'block':'none'}">
-                                        Name is required.
+                                        {{validationMessage.name}}
                                     </div>
                                 </div>
                                 <div class="col col-md-6">
@@ -22,7 +21,7 @@
                                     <input class="form-control" placeholder="Origin" name="origin"
                                         [(ngModel)]="food.origin" required />
                                     <div class="invalid-feedback" [ngStyle]="{display:required.origin?'block':'none'}">
-                                        Origin is required.
+                                        {{validationMessage.origin}}
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -30,7 +29,7 @@
                                     <div>
                                         <label class="d-inline-block border w-25 p-3 h5 bg-info cursor-pointer"
                                             for="thumbnail">
-                                            {{foodImage == "" ? "Choose ":"Update "}}Thumbnail
+                                            {{foodImage == "" ? "Choose ":"Update "}} thumbnail
                                         </label>
                                         <input hidden type="file" name="thumbnail" id="thumbnail" ngModel
                                             (change)="selectImage($event)">
@@ -40,14 +39,14 @@
                                             *ngIf="thumbnailImageBase64">
                                     </div>
                                     <div class="invalid-feedback" [ngStyle]="{display:isNotImage?'block':'none'}">
-                                        File type not supported. Suppported files are jpeg, jpg and png.
+                                        {{validationMessage.fileType}}
                                     </div>
                                     <div class="invalid-feedback" [ngStyle]="{display:isOverSizedImage?'block':'none'}">
-                                        File size should not exceed 5Mb.
+                                        {{validationMessage.fileSize}}
                                     </div>
                                     <div class="invalid-feedback"
                                         [ngStyle]="{display:required.thumbnail?'block':'none'}">
-                                        <p><b>Thumbnail is required.</b></p>
+                                        <p><b>{{validationMessage.thumbnail}}</b></p>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -68,7 +67,7 @@
                                 <div class="col-12" *ngIf="required.ingredients">
                                     <div class="invalid-feedback"
                                         [ngStyle]="{display:required.ingredients?'block':'none'}">
-                                        <p><b>Please fill all the fields.</b></p>
+                                        <p><b>{{validationMessage.ingredients}}</b></p>
                                     </div>
                                 </div>
                                 <p>
@@ -80,10 +79,6 @@
                                 <button class="btn btn-info" type="submit">&#43; {{isUpdate?'Update':'Add'}}
                                     Food</button>
                             </div>
-                            <!-- <div class="invalid-feedback text-center"
-                                [ngStyle]="{display:foodAddFailed?'block':'none'}">
-                                Game {{isUpdate?'update':'add'}} Failed.
-                            </div> -->
                         </form>
                         <br>
                         <app-alert *ngIf="hasAlert" [alert_type]="alert_type" [alert_message]="alert_message">

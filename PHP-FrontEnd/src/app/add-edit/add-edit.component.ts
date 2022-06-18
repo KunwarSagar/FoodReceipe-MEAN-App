@@ -24,6 +24,15 @@ export class AddEditComponent implements OnInit {
   thumbnailImageBase64!: any;
   thumbnailImage: any = "";
 
+  validationMessage:any = {
+    name: environment.NAME_REQUIRES,
+    origin: environment.ORIGIN_REQUIRED,
+    thumbnail:  environment.THUMBNAIL_REQUIRED,
+    fileSize: environment.FILESIZE_EXCEEDS,
+    fileType: environment.FILETYPE_NOT_MATCH,
+    ingredients : environment.INGREDIENTS_REQUIRED,
+  }
+
   required: any = {
     name: false,
     origin: false,
@@ -33,7 +42,7 @@ export class AddEditComponent implements OnInit {
 
   isNotImage: boolean = false;
   isOverSizedImage: boolean = false;
-  acceptableExtensions: string[] = ["image/png", "image/jpg", "image/jpeg"];
+  acceptableExtensions: string[] = environment.ACCEPTED_FILES;
 
   hasAlert: boolean = false;
   alert_type!: string;
@@ -102,7 +111,7 @@ export class AddEditComponent implements OnInit {
     if (this.thumbnailImage == "" && this.isUpdate) {
       formData.append('imageUrl', this.food.imageUrl);
     } else {
-      formData.append('thumbnailImage', this.thumbnailImage);
+      formData.append(environment.THUMBNAIL_IMAGE_KEY, this.thumbnailImage);
     }
     formData.append('name', this.food.name);
     formData.append('description', this.food.description);
@@ -138,7 +147,7 @@ export class AddEditComponent implements OnInit {
     if (!this.acceptableExtensions.includes(imageExtension)) {
       this.isNotImage = true;
     }
-    if (imageSize > 5 * 1024 * 1024) {
+    if (imageSize > environment.FILE_SIZE) {
       this.isOverSizedImage = true;
     }
     if (this.isNotImage || this.isOverSizedImage) {
