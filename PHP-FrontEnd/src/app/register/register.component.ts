@@ -16,6 +16,8 @@ export class RegisterComponent implements OnInit {
 
   isLoggedIn!: boolean;
 
+  allFieldsRequired: boolean = false;
+
   hasAlert: boolean = false;
   alert_type!: string;
   alert_message!: string;
@@ -42,6 +44,12 @@ export class RegisterComponent implements OnInit {
    */
   register(): void {
 
+    if (this.inputFieldsAreEmpty()) {
+      this.showAlert(environment.ERROR_ALERT_TYPE, environment.ALL_FIELDS_REQUIRED);
+      this.hideAlertAfterSomeTime();
+      return;
+    }
+
     const formValue = this.registrationForm.value;
     if (formValue.password != formValue.repeatPassword) {
       this.showAlert(environment.ERROR_ALERT_TYPE, environment.REPEAT_PASSWORD_NOT_MATCH);
@@ -62,6 +70,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  inputFieldsAreEmpty(): boolean {
+    let hasError = false;
+
+    if (this.registrationForm.value.name == "" || this.registrationForm.value.email == "" || this.registrationForm.value.username == "" || this.registrationForm.value.password == "" || this.registrationForm.value.repeatPassword == "") {
+      hasError = true;
+    }
+
+    return hasError;
+  }
   /**
    * redirect to login
    */

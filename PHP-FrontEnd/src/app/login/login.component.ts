@@ -49,6 +49,14 @@ export class LoginComponent implements OnInit {
    * login
    */
   login(): void {
+
+    if (this.loginForm.value.username == "" || this.loginForm.value.password == "") {
+      this.showAlert(environment.ERROR_ALERT_TYPE, environment.ALL_FIELDS_REQUIRED);
+      this.hideAlertAfterSomeTime();
+      return;
+    }
+
+
     this.usersServie.login(this.loginForm.value).subscribe({
       next: (response) => {
         if (response.success) {

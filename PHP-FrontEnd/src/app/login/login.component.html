@@ -1,18 +1,16 @@
 <main class="container">
     <div class="row">
         <div class="col">
-            <div class="card mx-auto mt-5 p-3 w-50">
+            <div class="card mx-auto mt-5 p-3 w-50 bg-transparent border">
                 <form class="form-group" #loginForm="ngForm" (ngSubmit)="login()">
                     <h5 class="text-center">Login</h5>
                     <div class="my-2">
                         <label class="label-control" for="">Username:</label>
-                        <input class="form-control" placeholder="username" name="username"
-                            ngModel="sagarkunwar" />
+                        <input class="form-control" placeholder="username" name="username" ngModel />
                     </div>
                     <div class="my-2">
                         <label class="label-control" for="">Password:</label>
-                        <input type="password" class="form-control" placeholder="password" name="password"
-                            ngModel="password" />
+                        <input type="password" class="form-control" placeholder="password" name="password" ngModel />
                     </div>
 
                     <div class="mt-4 text-center">

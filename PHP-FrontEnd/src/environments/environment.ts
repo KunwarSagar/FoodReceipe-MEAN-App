@@ -27,7 +27,9 @@ export const environment = {
   UPDATE_SUCCESS : "Updated.",
   ADD_SUCCESS : "Food added.",
   DELETE_FAILED : "Delete failed.",
-  DELETE_SUCCESS : "Deleted."
+  DELETE_SUCCESS : "Deleted.",
+
+  ALL_FIELDS_REQUIRED : "All fields are required."
 };
 
 /*
