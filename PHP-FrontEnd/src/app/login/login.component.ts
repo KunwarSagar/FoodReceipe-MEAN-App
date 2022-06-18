@@ -23,28 +23,31 @@ export class LoginComponent implements OnInit {
   alert_type!: string;
   alert_message!: string;
 
-  constructor(private authService: AuthService, private usersServie: UsersService, private router: Router, private route:ActivatedRoute) { }
-  currentUrl!:string;
-  previousUrl!:string;
+  constructor(private authService: AuthService, private usersServie: UsersService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // if already logged in go to foods
     if (this.authService.isLoggedIn()) {
-      this.gotoHome();
+      this.gotoFoods();
     }
-    
+
     this.route.queryParams.subscribe(params => {
-      if(params['s'] == "true"){
+      if (params['s'] == "true") {
         // to make sure url is not edited
-        if(localStorage.getItem('s') == "true"){ 
+        if (localStorage.getItem('s') == "true") {
           localStorage.removeItem('s');
           this.hasAlert = true;
           this.alert_message = environment.REGISTRATION_SUCCESS_REDIRECTION;
           this.alert_type = environment.SUCCESS_ALERT_TYPE;
+          this.hideAlertAfterSomeTime();
         }
       }
     });
   }
 
+  /**
+   * login
+   */
   login(): void {
     this.usersServie.login(this.loginForm.value).subscribe({
       next: (response) => {
@@ -54,7 +57,8 @@ export class LoginComponent implements OnInit {
             // this.alert_type = environment.SUCCESS_ALERT_TYPE;
             // this.alert_message = environment.LOGIN_SUCCESS;
             // this.hideAlertAfterSomeTime();
-            this.gotoHome();
+            localStorage.setItem('l', "true");
+            this.gotoFoods();
             return;
           }
         }
@@ -72,11 +76,19 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  gotoHome(): void {
+  /**
+   * redirect to foods routes
+   */
+  gotoFoods(): void {
     this.router.navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate(['/home']));
+      .then(() => {
+        this.router.navigate(['/foods'], { queryParams: { l: true } })
+      });
   }
 
+  /**
+   * hide alert after some time
+   */
   hideAlertAfterSomeTime(): void {
     setTimeout(() => {
       this.hasAlert = false;

@@ -39,7 +39,7 @@ export class FoodsComponent implements OnInit {
   // fontawesonme icons
   faTrash = faTrash;
 
-  isLoggedIn!:boolean;
+  isLoggedIn!: boolean;
 
   foods: Food[] = [];
   pageNumber: number = 1;
@@ -54,9 +54,14 @@ export class FoodsComponent implements OnInit {
     offset: environment.ITEMS_OFFSET,
     page: 1
   }
-  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService:AuthService) {
+
+  hasAlert: boolean = false;
+  alert_type!: string;
+  alert_message!: string;
+
+  constructor(private foodService: FoodService, private route: ActivatedRoute, private router: Router, private authService: AuthService) {
     this.isLoggedIn = this.authService.isLoggedIn();
-   }
+  }
 
 
   ngOnInit(): void {
@@ -65,6 +70,19 @@ export class FoodsComponent implements OnInit {
      * get new Foods or know the kind of page it is, like first or last or any other
      */
     this.route.queryParams.subscribe(params => {
+
+      //login success alert
+      if (params['l'] == "true") {
+        if (localStorage.getItem('l') == "true") {
+          localStorage.removeItem('l');
+          this.hasAlert = true;
+          this.alert_type = environment.SUCCESS_ALERT_TYPE;
+          this.alert_message = environment.LOGIN_SUCCESS;
+          this.hideAlertAfterSomeTime();
+        }
+      }
+
+      // get query params
       this.queryParams = {
         searchString: params['searchString'] ? params['searchString'] : "",
         count: params['count'] ? parseInt(params['count'], environment.RADIX) : this.queryParams.count,
@@ -72,8 +90,10 @@ export class FoodsComponent implements OnInit {
         page: params['page'] ? parseInt(params['page'], environment.RADIX) : this.pageNumber
       }
 
+      // set pagination
       this.setPages(this.queryParams);
 
+      // get foods based on queries
       if (this.queryParams.searchString != "" || this.queryParams.count > 0 || this.queryParams.offset > 0) {
         this.getFoods(this.queryParams);
       } else {
@@ -111,7 +131,7 @@ export class FoodsComponent implements OnInit {
       this.foods = foods;
 
       // while searching if count is less than required per page, make this last page
-      if(this.foods.length < environment.ITEMS_COUNT_PER_PAGE){
+      if (this.foods.length < environment.ITEMS_COUNT_PER_PAGE) {
         this.isLastPage = true;
       }
     });
@@ -174,5 +194,14 @@ export class FoodsComponent implements OnInit {
   redirectTo(uri: string) {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
       this.router.navigate([uri], { queryParams: this.queryParams }));
+  }
+
+  /**
+   * hide alert after certain time
+   */
+  hideAlertAfterSomeTime(): void {
+    setTimeout(() => {
+      this.hasAlert = false;
+    }, environment.ALERT_HIDE_TIME_IN_SECOND);
   }
 }

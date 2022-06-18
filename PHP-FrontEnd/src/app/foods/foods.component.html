@@ -1,6 +1,7 @@
 <main class="container">
   <div class="row">
     <div class="col">
+      <app-alert *ngIf="hasAlert" [alert_type]="alert_type" [alert_message]="alert_message"></app-alert>
       <div *ngIf="foods.length > 0">
         <button class="btn btn-secondary" routerLink="/foods/add">&#43; Add food</button>
       </div>
